@@ -14,7 +14,26 @@
     
     <tags>
       
-      <tag>python</tag>
+      <tag>logging</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Docker部署配置相关使用总结</title>
+    <link href="/2021/04/22/Docker%E9%83%A8%E7%BD%B2%E9%85%8D%E7%BD%AE%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/"/>
+    <url>/2021/04/22/Docker%E9%83%A8%E7%BD%B2%E9%85%8D%E7%BD%AE%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Docker部署配置相关使用总结"><a href="#Docker部署配置相关使用总结" class="headerlink" title="Docker部署配置相关使用总结"></a>Docker部署配置相关使用总结</h2><ul><li><p>docker 删除container或删除images<br>删除所有不在运行的容器docker rm $(docker ps -a -q)<br>暂停容器 docker stop +ID<br>删除镜像 docker rmi +ID或者docker image rm<br>Docker添加环境变量，不是用RUN export的方式，这种方式只在当前层有效，而ENV是贯穿所有setp的<br>ENV http_proxy http:<br>ENV https_proxy http:</p></li><li><p>关于这行命令<code>docker build -t iris-classifier $saved_path</code><br>先说<code>$</code>是表示<code>$</code>后面的是一个变量，如果不加则是saved_path字符串<br>参数<code>-t</code>是指定name和tag，例如：<code>ner-service:latest</code>,冒号前是name，冒号后是tag，默认是使用当前路径下的Dockerfile文件进行构建，如果文件不在当前路径或者名字不叫Dockerfile，则用-f进行指定。$saved_path是指构建image的时候用到的文件，如果在当前目录下也需要传一个.<br>这个命令会把Dockerfile和当前文件夹的文件传到deamon，生成一个image再传回本地，但是这个image不会以实体文件的形式存在当前目录下，他只是和其他docker run文件一样放在其他地方，通过docker images可以查看当前所有的images。如果想保存则可以使用save命令</p></li><li><p>打包docker 镜像到当前目录<br>docker save ner-service &gt; ner-service.tar<br>镜像导入<br>docker load –input ner-service.tar<br>镜像导出和容器导出<br><a href="https://www.jianshu.com/p/8408e06b7273">https://www.jianshu.com/p/8408e06b7273</a><br>top命令查看资源占用情况<br>docker run -p 5000:5000 ner-service</p></li></ul><p>-p 5000:5000是把容器的5000端口暴露到本机的5000</p><h2 id="Docker-ARG-vs-ENV"><a href="#Docker-ARG-vs-ENV" class="headerlink" title="Docker ARG vs ENV"></a>Docker ARG vs ENV</h2><p>构建 Docker 镜像的的时候有两种环境变量 ARG 和 ENV, 一种是在运行 build 命令时通过 –build-arg 参数设置的 build-time variables 以及通过在 dockerfile 里面设置 ENV 指令配置的环境变量，本文说明它们之间的区别。</p><ul><li>ARG<ul><li>Dockerfile 里面的 ARG 指令定义了一个变量，在运行 docker build 命令时使用 –build-arg <varname> = <value> 参数将其传递给构建器。</li><li>这种变量只存在于镜像构建的时候，一旦镜像构建完成就失效了，不要使用构建时变量来传递诸如 github 密钥，用户凭据等机密数据，构建时变量值可以使用 docker history 命令查看。</li></ul></li><li>ENV<ul><li>Dockerfile 里面的 ENV 指令将环境变量 设置为值 ，这个变量将在构建阶段中所有后续指令的环境中使用。</li><li>使用 ENV 设置的环境变量将一直存在于构建镜像时以及镜像容器运行时，可以使用 docker inspect 查看设置打的变量。也可以使用 docker run –env <key> = <value> 来更改它们。</li></ul></li></ul>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>Docker</tag>
       
     </tags>
     
