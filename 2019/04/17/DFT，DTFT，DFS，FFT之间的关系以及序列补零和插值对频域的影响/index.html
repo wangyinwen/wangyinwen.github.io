@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>Hello World - Hexo</title>
+  <title>DFT，DTFT，DFS，FFT之间的关系以及序列补零和插值对频域的影响 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Hello World">
+            <span class="h2" id="subtitle" title="DFT，DTFT，DFS，FFT之间的关系以及序列补零和插值对频域的影响">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-04-22 15:13" pubdate>
-        2021年4月22日 下午
+      <time datetime="2019-04-17 21:37" pubdate>
+        2019年4月17日 晚上
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      75 字
+      1.6k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      16
        分钟
     </span>
   
@@ -225,28 +225,35 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">DFT，DTFT，DFS，FFT之间的关系以及序列补零和插值对频域的影响</h1>
             
             <div class="markdown-body">
-              <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+              <h2 id="DFT，DTFT，DFS，FFT之间的关系"><a href="#DFT，DTFT，DFS，FFT之间的关系" class="headerlink" title="DFT，DTFT，DFS，FFT之间的关系"></a>DFT，DTFT，DFS，FFT之间的关系</h2><p>很多同学学习了数字信号处理之后，被里面的几个名词搞的晕头转向，比如DFT，DTFT，DFS，FFT，FT,FS等，FT和FS属于信号与系统课程的内容，是对连续时间信号的处理，这里就不过多讨论，只解释一下前四者的关系。</p>
+<p>　　首先说明一下，这里只站在学生的角度以最浅显易懂的性质来解释问题，而不涉及到任何公式运算。</p>
+<p>　　学过卷积，我们都知道有时域卷积定理和频域卷积定理，在这里只需要记住两点：1.在一个域的相乘等于另一个域的卷积；2.与脉冲函数的卷积，在每个脉冲的位置上将产生一个波形的镜像。(在任何一本信号与系统课本里，此两条性质有详细公式证明)</p>
+<p>　　下面，就用这两条性质来说明DFT，DTFT，DFS，FFT之间的联系：</p>
+<p>　　先看图片：<br><img src="https://img-blog.csdnimg.cn/20190417213553164.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQ3ODgzNg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>　　首先来说图（1）和图（2），对于一个模拟信号，如图(1)所示，要分析它的频率成分，必须变换到频域，这是通过傅立叶变换即FT(Fourier Transform)得到的，于是有了模拟信号的频谱，如图(2)；注意1：时域和频域都是连续的！</p>
+<p>　　但是，计算机只能处理数字信号，首先需要将原模拟信号在时域离散化，即在时域对其进行采样，采样脉冲序列如图(3)所示，该采样序列的频谱如图(4)，可见它的频谱也是一系列的脉冲。所谓时域采样，就是在时域对信号进行相乘，(1)×(3)后可以得到离散时间信号x[n]，如图(5)所示；由前面的性质1，时域的相乘相当于频域的卷积，那么，图(2)与图(4)进行卷积，根据前面的性质2知，会在各个脉冲点处出现镜像，于是得到图(6)，它就是图(5)所示离散时间信号x[n]的DTFT(Discrete time Fourier Transform)，即离散时间傅立叶变换，这里强调的是“离散时间”四个字。注意2：此时时域是离散的，而频域依然是连续的。</p>
+<p>　　经过上面两个步骤，我们得到的信号依然不能被计算机处理，因为频域既连续，又周期。我们自然就想到，既然时域可以采样，为什么频域不能采样呢？这样不就时域与频域都离散化了吗？没错，接下来对频域在进行采样，频域采样信号的频谱如图(8)所示，它的时域波形如图(7)。现在我们进行频域采样，即频域相乘，图(6)×图(8)得到图(10)，那么根据性质1，这次是频域相乘，时域卷积了吧，图(5)和图(7)卷积得到图(9)，不出所料的，镜像会呈周期性出现在各个脉冲点处。我们取图（10）周期序列的主值区间，并记为X(k)，它就是序列x[n]的DFT(Discrete Fourier Transform)，即离散傅立叶变换。可见，DFT只是为了计算机处理方便，在频率域对DTFT进行的采样并截取主值而已。有人可能疑惑，对图(10)进行IDFT，回到时域即图(9)，它与原离散信号图(5)所示的x[n]不同呀，它是x[n]的周期性延拓！没错，因此你去查找一个IDFT的定义式，是不是对n的取值区间进行限制了呢？这一限制的含义就是，取该周期延拓序列的主值区间，即可还原x[n]！</p>
+<p>　　FFT呢？FFT的提出完全是为了快速计算DFT而已，它的本质就是DFT！我们常用的信号处理软件MATLAB或者DSP软件包中，包含的算法都是FFT而非DFT。</p>
+<p>　　DFS,是针对时域周期信号提出的，如果对图(9）所示周期延拓信号进行DFS，就会得到图(10)，只要截取其主值区间，则与DFT是完全的一一对应的精确关系。这点对照DFS和DFT的定义式也可以轻易的看出。因此DFS与DFT的本质是一样的，只不过描述的方法不同而已。</p>
+<p>　　不知道经过上面的解释，您是否明白各种T的关系了呢？如果您不是算法设计者，其实只要懂得如何使用FFT分析频谱即可，博主近期会更新一篇文章，专门介绍如何利用FFT分析简单信号的频谱。</p>
+<p>　　其实个人认为，纠结了这么多，就是为了打破现实模拟世界与计算机数字世界的界限呀！</p>
+<h2 id="序列补零和插值对频域的影响"><a href="#序列补零和插值对频域的影响" class="headerlink" title="序列补零和插值对频域的影响"></a>序列补零和插值对频域的影响</h2><p>连续时间信号经采样、截断后的序列为Xn(n)，其频谱函数XN(ejw)，并不随序列末端补零而改变，信号的频率分辨率为Fs/N.序列末端补零只能提高信号频谱显示的分辨率。换句话说，如果连续时间信号在离散化或时域加窗截断过程中，由于频谱泄漏或混叠等原因已造成信号频谱中信息的失真，则无论怎么补零做DFT，都无法再恢复已损失的信息。<br>　　提高信号的频率分辨率只有提高信号的采样频率或增加序列的截断长度N(信号的持续时间加长)。<br>1）数据后面补零——-不能提高信号的频率分辨率<br>　　序列末端补零后，尽管信号的频谱不会变化，但对序列做补零后L点DFT后，计算出的频谱实际上是原信号频谱在[0,2*pi)区间上L个等间隔采样，从而增加了对真实频谱采样的点数，并改变了采样点的位置，这将会显示出原信号频谱的更多的细节。故而数据后面补零可以克服栅栏效应。<br>2）数据间隔补零——-不能提高信号的频率分辨率<br>3）数据插值<br>相当于提高了信号的采样率，可以提高信号的频率分辨率</p>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/DFT/">DFT</a>
+                    
+                  </div>
                 
               </div>
               
@@ -261,9 +268,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/22/python%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7logging%E5%A6%82%E4%BD%95%E6%B6%88%E9%99%A4%E9%87%8D%E5%A4%8D%E6%89%93%E5%8D%B0%E9%97%AE%E9%A2%98%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%A6%82%E4%BD%95%E5%BA%94%E7%94%A8/">
+                      <a href="/2019/05/30/%E9%A2%91%E7%8E%87%E3%80%81%E6%B3%A2%E9%95%BF%E3%80%81%E4%BC%A0%E8%BE%93%E8%B7%9D%E7%A6%BB%E3%80%81%E4%BC%A0%E8%BE%93%E9%80%9F%E7%8E%87%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%8C%E9%95%BF%E6%B3%A2%EF%BC%88LF%EF%BC%89%EF%BC%8C%E4%B8%AD%E6%B3%A2(MF)%EF%BC%8C%E7%9F%AD%E6%B3%A2(HF)%EF%BC%8C%E5%8E%98%E7%B1%B3%E6%B3%A2(SHF)%EF%BC%8C%E6%AF%AB%E7%B1%B3%E6%B3%A2(EHF)%E9%A2%91%E7%8E%87%E8%8C%83%E5%9B%B4%E6%B3%A2%E9%95%BF%E7%9A%84%E6%80%BB%E7%BB%93/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">python日志管理工具logging如何消除重复打印问题，以及在项目中如何应用</span>
+                        <span class="hidden-mobile">频率、波长、传输距离、传输速率之间的关系，长波（LF），中波(MF)，短波(HF)，厘米波(SHF)，毫米波(EHF)频率范围波长的总结</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -271,8 +278,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/12/22/Docker%E9%83%A8%E7%BD%B2%E9%85%8D%E7%BD%AE%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/">
-                        <span class="hidden-mobile">Docker部署配置相关使用总结</span>
+                      <a href="/2019/03/22/%E6%95%B0%E5%AD%97%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E6%A8%A1%E6%8B%9F%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E5%92%8C%E5%BD%92%E4%B8%80%E5%8C%96%E8%A7%92%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%8C%E5%8F%8AFFT%E9%A2%91%E7%8E%87%E5%92%8C%E5%AE%9E%E9%99%85%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%E5%88%86%E6%9E%90/">
+                        <span class="hidden-mobile">数字角频率和模拟角频率和物理频率和归一化角频率的关系，及FFT频率和实际物理频率的关系分析</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -18,9 +18,25 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>标签 - Hexo</title>
+  <title>Docker部署配置相关使用总结 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -48,7 +64,7 @@
 
 
 <body>
-  <header style="height: 80vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -142,22 +158,55 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/deer_green.png') no-repeat center center;
+         style="background: url('/img/city.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="标签">
+            <span class="h2" id="subtitle" title="Docker部署配置相关使用总结">
               
             </span>
 
             
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-12-22 17:22" pubdate>
+        2020年12月22日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      662 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      7
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
           </div>
 
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
           
         </div>
       </div>
@@ -166,24 +215,141 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
 
-<div class="text-center tagcloud">
-  <a href="/tags/C/" style="font-size: 15px; color: #bbe">C++</a> <a href="/tags/DFT/" style="font-size: 15px; color: #bbe">DFT</a> <a href="/tags/Docker/" style="font-size: 15px; color: #bbe">Docker</a> <a href="/tags/FFT/" style="font-size: 15px; color: #bbe">FFT</a> <a href="/tags/logging/" style="font-size: 15px; color: #bbe">logging</a> <a href="/tags/%E6%95%B0%E5%AD%97%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86/" style="font-size: 15px; color: #bbe">数字信号处理</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" style="font-size: 30px; color: #337ab7">计算机视觉</a>
-</div>
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Docker部署配置相关使用总结</h1>
+            
+            <div class="markdown-body">
+              <h2 id="Docker部署配置相关使用总结"><a href="#Docker部署配置相关使用总结" class="headerlink" title="Docker部署配置相关使用总结"></a>Docker部署配置相关使用总结</h2><ul>
+<li><p>docker 删除container或删除images<br>删除所有不在运行的容器docker rm $(docker ps -a -q)<br>暂停容器 docker stop +ID<br>删除镜像 docker rmi +ID或者docker image rm<br>Docker添加环境变量，不是用RUN export的方式，这种方式只在当前层有效，而ENV是贯穿所有setp的<br>ENV http_proxy http:<br>ENV https_proxy http:</p>
+</li>
+<li><p>关于这行命令<code>docker build -t iris-classifier $saved_path</code><br>先说<code>$</code>是表示<code>$</code>后面的是一个变量，如果不加则是saved_path字符串<br>参数<code>-t</code>是指定name和tag，例如：<code>ner-service:latest</code>,冒号前是name，冒号后是tag，默认是使用当前路径下的Dockerfile文件进行构建，如果文件不在当前路径或者名字不叫Dockerfile，则用-f进行指定。$saved_path是指构建image的时候用到的文件，如果在当前目录下也需要传一个.<br>这个命令会把Dockerfile和当前文件夹的文件传到deamon，生成一个image再传回本地，但是这个image不会以实体文件的形式存在当前目录下，他只是和其他docker run文件一样放在其他地方，通过docker images可以查看当前所有的images。如果想保存则可以使用save命令</p>
+</li>
+<li><p>打包docker 镜像到当前目录<br>docker save ner-service &gt; ner-service.tar<br>镜像导入<br>docker load –input ner-service.tar<br>镜像导出和容器导出<br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8408e06b7273">https://www.jianshu.com/p/8408e06b7273</a><br>top命令查看资源占用情况<br>docker run -p 5000:5000 ner-service</p>
+</li>
+</ul>
+<p>-p 5000:5000是把容器的5000端口暴露到本机的5000</p>
+<h2 id="Docker-ARG-vs-ENV"><a href="#Docker-ARG-vs-ENV" class="headerlink" title="Docker ARG vs ENV"></a>Docker ARG vs ENV</h2><p>构建 Docker 镜像的的时候有两种环境变量 ARG 和 ENV, 一种是在运行 build 命令时通过 –build-arg 参数设置的 build-time variables 以及通过在 dockerfile 里面设置 ENV 指令配置的环境变量，本文说明它们之间的区别。</p>
+<ul>
+<li>ARG<ul>
+<li>Dockerfile 里面的 ARG 指令定义了一个变量，在运行 docker build 命令时使用 –build-arg <varname> = <value> 参数将其传递给构建器。</li>
+<li>这种变量只存在于镜像构建的时候，一旦镜像构建完成就失效了，不要使用构建时变量来传递诸如 github 密钥，用户凭据等机密数据，构建时变量值可以使用 docker history 命令查看。</li>
+</ul>
+</li>
+<li>ENV<ul>
+<li>Dockerfile 里面的 ENV 指令将环境变量 设置为值 ，这个变量将在构建阶段中所有后续指令的环境中使用。</li>
+<li>使用 ENV 设置的环境变量将一直存在于构建镜像时以及镜像容器运行时，可以使用 docker inspect 查看设置打的变量。也可以使用 docker run –env <key> = <value> 来更改它们。</li>
+</ul>
+</li>
+</ul>
 
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/22/hello-world/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/02/03/%E5%9B%BE%E5%83%8F%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0%E4%B8%AD%E7%9A%84PSNR%E5%92%8CSSIM%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%8C%E5%85%AC%E5%BC%8F%E5%92%8C%E5%90%AB%E4%B9%89/">
+                        <span class="hidden-mobile">图像质量评估中的PSNR和SSIM的定义，公式和含义</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "4l4KDMQ2rUvohNwf2pd0A3MP-gzGzoHsz",
+          app_key: "Kd9Pm7FejmvkWARe5jtfgoVp",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -287,9 +453,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
 
 
 

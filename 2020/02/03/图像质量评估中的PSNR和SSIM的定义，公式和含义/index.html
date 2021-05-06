@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>Hello World - Hexo</title>
+  <title>图像质量评估中的PSNR和SSIM的定义，公式和含义 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Hello World">
+            <span class="h2" id="subtitle" title="图像质量评估中的PSNR和SSIM的定义，公式和含义">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-04-22 15:13" pubdate>
-        2021年4月22日 下午
+      <time datetime="2020-02-03 18:09" pubdate>
+        2020年2月3日 晚上
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      75 字
+      1.1k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      11
        分钟
     </span>
   
@@ -225,28 +225,34 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">图像质量评估中的PSNR和SSIM的定义，公式和含义</h1>
             
             <div class="markdown-body">
-              <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+              <h1 id="PSNR"><a href="#PSNR" class="headerlink" title="PSNR"></a>PSNR</h1><p>峰值信噪比（PSNR）， 一种评价图像的客观标准，应用场景有很多。它具有局性，PSNR是“Peak Signal to Noise Ratio”的缩写。peak的中文意思是顶点。而ratio的意思是比率或比列的。整个意思就是到达噪音比率的顶点信号，psnr一般是用于最大值信号和背景噪音之间的一个工程项目。通常在经过影像压缩之后，通常输 出的影像都会在某种程度与原始影像不同。为了衡量经过处理后的影像品质，我们通常会参考PSNR值来衡量某个处理程序能否令人满意。它是原图像与被处理图 像之间的均方误差相对于(2^n-1)^2的对数值(信号最大值的平方，n是每个采样值的比特数)，它的单位是dB。<br><img src="https://img-blog.csdnimg.cn/20200203174618621.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>其中，MSE表示当前图像X和参考图像Y的均方误差（MeanSquare Error），X(i,j)，Y(i,j)分别代表对应坐标处的像素值，H、W分别为图像的高度和宽度；n为每像素的比特数，一般取8，即像素灰阶数为256. PSNR的单位是dB，数值越大表示失真越小。，因为数值越大代表MSE越小。MSE越小代表两张图片越接近，失真就越小。</p>
+<p>PSNR是最普遍和使用最为广泛的一种图像客观评价指标，然而它是基于对应像素点间的误差，即 基于误差敏感的图像质量评价。由于并未考虑到人眼的视觉特性（人眼对空间频率较低的对比差异敏感度较高，人眼对亮度对比差异的敏感度较色度高，人眼对一个 区域的感知结果会受到其周围邻近区域的影响等），因而经常出现评价结果与人的主观感觉不一致的情况。</p>
+<h1 id="SSIM"><a href="#SSIM" class="headerlink" title="SSIM"></a>SSIM</h1><p>SSIM的全称为structural similarity index，即为结构相似性，是一种衡量两幅图像相似度的指标。该指标首先由德州大学奥斯丁分校的图像和视频工程实验室(Laboratory for Image and Video Engineering)提出。而如果两幅图像是压缩前和压缩后的图像，那么SSIM算法就可以用来评估压缩后的图像质量。</p>
+<p>SSIM如何表征相似性：<br>先给出一组公式：<br><img src="https://img-blog.csdnimg.cn/20200203180810909.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQ3ODgzNg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>uX、uY分别表示图像X和Y的均值，σX、σY分别表示图像X和Y的标准差，σX<em>σX、σY</em>σY（实在打不出上标啊，理解万岁）分别表示图像X和Y的方差。σXY代表图像X和Y协方差。C1，C2和C3为常数，是为了避免分母为0而维持稳定。通常取C1=(K1<em>L)^2, C2=(K2</em>L)^2, C3=C2/2, 一般地K1=0.01, K2=0.03, L=255（ 是像素值的动态范围，一般都取为255）</p>
+<p>最后的SSIM指数为：<br><img src="https://img-blog.csdnimg.cn/20200203180817446.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>当我们设定C3=C2/2时，我们可以将公式改写成更加简单的形式：<br><img src="https://img-blog.csdnimg.cn/20200203180835512.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>所以结构相似度指数从图像组成的角度将结构信息定义为独立于亮度、对比度的反映场景中物体结构的属性，并将失真建模为亮度、对比度和结构三个不同因素的组合。用均值作为亮度的估计，标准差作为对比度的估计，协方差作为结构相似程度的度量。</p>
+<p>如何求得均值，方差与标准差：</p>
+<p><img src="https://img-blog.csdnimg.cn/2020020318083832.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzQ3ODgzNg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>而在实际应用中，一般采用高斯函数计算图像的均值、方差以及协方差，而不是采用遍历像素点的方式，以换来更高的效率。</p>
+<p>至于为什么采用高斯函数计算图像的均值、方差以及协方差，还有待深究</p>
+<p>在实际应用中，可以利用滑动窗将图像分块，令分块总数为N，考虑到窗口形状对分块的影响，采用高斯加权计算每一窗口的均值、方差以及协方差，然后计算对应块的结构相似度SSIM，最后将平均值作为两图像的结构相似性度量，即平均结构相似性MSSIM。</p>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a>
+                    
+                  </div>
                 
               </div>
               
@@ -261,9 +267,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/04/22/python%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7logging%E5%A6%82%E4%BD%95%E6%B6%88%E9%99%A4%E9%87%8D%E5%A4%8D%E6%89%93%E5%8D%B0%E9%97%AE%E9%A2%98%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%A6%82%E4%BD%95%E5%BA%94%E7%94%A8/">
+                      <a href="/2020/12/22/Docker%E9%83%A8%E7%BD%B2%E9%85%8D%E7%BD%AE%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">python日志管理工具logging如何消除重复打印问题，以及在项目中如何应用</span>
+                        <span class="hidden-mobile">Docker部署配置相关使用总结</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -271,8 +277,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/12/22/Docker%E9%83%A8%E7%BD%B2%E9%85%8D%E7%BD%AE%E7%9B%B8%E5%85%B3%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/">
-                        <span class="hidden-mobile">Docker部署配置相关使用总结</span>
+                      <a href="/2019/07/16/DenseNet%E8%AF%A6%E8%A7%A3/">
+                        <span class="hidden-mobile">DenseNet详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

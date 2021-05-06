@@ -1,0 +1,619 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>DenseNet详解 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.10","typing":{"enable":true,"typeSpeed":70,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王胤文的博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/city.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="DenseNet详解">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-07-16 15:23" pubdate>
+        2019年7月16日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">DenseNet详解</h1>
+            
+            <div class="markdown-body">
+              </ul><h2><a name="t0"></a><strong>一、概述</strong></h2>
+
+<p>作为CVPR2017年的Best Paper, DenseNet脱离了加深网络层数(ResNet)和加宽网络结构(Inception)来提升网络性能的定式思维,从特征的角度考虑,通过特征重用和旁路(Bypass)设置,既大幅度减少了网络的参数量,又在一定程度上缓解了gradient vanishing问题的产生.结合信息流和特征复用的假设,DenseNet当之无愧成为2017年计算机视觉顶会的年度最佳论文.</p>
+
+<p>卷积神经网络在沉睡了近20年后,如今成为了深度学习方向最主要的网络结构之一.从一开始的只有五层结构的LeNet, 到后来拥有19层结构的VGG, 再到首次跨越100层网络的Highway Networks与ResNet, 网络层数的加深成为CNN发展的主要方向之一.</p>
+
+<p>随着CNN网络层数的不断增加,gradient vanishing和model degradation问题出现在了人们面前,BatchNormalization的广泛使用在一定程度上缓解了gradient vanishing的问题,而ResNet和Highway Networks通过构造恒等映射设置旁路,进一步减少了gradient vanishing和model degradation的产生.Fractal Nets通过将不同深度的网络并行化,在获得了深度的同时保证了梯度的传播,随机深度网络通过对网络中一些层进行失活,既证明了ResNet深度的冗余性,又缓解了上述问题的产生. 虽然这些不同的网络框架通过不同的实现加深的网络层数,但是他们都包含了相同的核心思想,既将feature map进行跨网络层的连接.</p>
+
+<p style="text-align:center;"><img alt="" class="has" height="469" src="https://img-blog.csdn.net/20180827164003429?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NJR0FJX0NTRE4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" lazyload width="608"></p>
+
+<p>DenseNet作为另一种拥有较深层数的卷积神经网络,具有如下优点:</p>
+
+<p>(1) 相比ResNet拥有更少的参数数量.</p>
+
+<p>(2) 旁路加强了特征的重用.</p>
+
+<p>(3) 网络更易于训练,并具有一定的正则效果.</p>
+
+<p>(4) 缓解了gradient vanishing和model degradation的问题.</p>
+
+<p>何恺明先生在提出ResNet时做出了这样的假设:若某一较深的网络多出另一较浅网络的若干层有能力学习到恒等映射,那么这一较深网络训练得到的模型性能一定不会弱于该浅层网络.通俗的说就是如果对某一网络中增添一些可以学到恒等映射的层组成新的网路,那么最差的结果也是新网络中的这些层在训练后成为恒等映射而不会影响原网络的性能.同样DenseNet在提出时也做过假设:与其多次学习冗余的特征,特征复用是一种更好的特征提取方式.</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="t1"></a><strong>二、DenseNet</strong></h2>
+
+<p>假设输入为一个图片&nbsp;<img alt="X_{0}" class="has" src="https://www.zhihu.com/equation?tex=X_%7B0%7D" srcset="/img/loading.gif" lazyload>&nbsp;, 经过一个L层的神经网络, 其中第i层的非线性变换记为&nbsp;<img alt="H_{i}" class="has" src="https://www.zhihu.com/equation?tex=H_%7Bi%7D" srcset="/img/loading.gif" lazyload>&nbsp;(*),&nbsp;<img alt="H_{i}" class="has" src="https://www.zhihu.com/equation?tex=H_%7Bi%7D" srcset="/img/loading.gif" lazyload>&nbsp;(*)可以是多种函数操作的累加如BN、ReLU、Pooling或Conv等. 第i层的特征输出记作&nbsp;<img alt="X_{i}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bi%7D" srcset="/img/loading.gif" lazyload>&nbsp;.</p>
+
+<blockquote>ResNet</blockquote>
+
+<p>传统卷积前馈神经网络将第i层的输出&nbsp;<img alt="X_{i}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bi%7D" srcset="/img/loading.gif" lazyload>&nbsp;作为i+1层的输入,可以写作<img alt="X_{i}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bi%7D" srcset="/img/loading.gif" lazyload>&nbsp;=&nbsp;<img alt="H_{i}" class="has" src="https://www.zhihu.com/equation?tex=H_%7Bi%7D" srcset="/img/loading.gif" lazyload>&nbsp;(&nbsp;<img alt="X_{i-1}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bi-1%7D" srcset="/img/loading.gif" lazyload>&nbsp;). ResNet增加了旁路连接,可以写作</p>
+
+<p><img alt="X_{l}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bl%7D" srcset="/img/loading.gif" lazyload>&nbsp;=&nbsp;<img alt="X_{l}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bl%7D" srcset="/img/loading.gif" lazyload>&nbsp;(&nbsp;<img alt="X_{l-1}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bl-1%7D" srcset="/img/loading.gif" lazyload>&nbsp;)+&nbsp;<img alt="X_{l-1}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bl-1%7D" srcset="/img/loading.gif" lazyload></p>
+
+<p>ResNet的一个最主要的优势便是梯度可以流经恒等函数来到达靠前的层.但恒等映射和非线性变换输出的叠加方式是相加, 这在一定程度上破坏了网络中的信息流.</p>
+
+<blockquote>Dense Connectivity</blockquote>
+
+<p>为了进一步优化信息流的传播,DenseNet提出了图示的网络结构</p>
+
+<p style="text-align:center;"><img alt="" class="has" height="472" src="https://img-blog.csdn.net/20180827164127931?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NJR0FJX0NTRE4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" lazyload width="615"></p>
+
+<p>如图所示,第i层的输入不仅与i-1层的输出相关,还有所有之前层的输出有关.记作:</p>
+
+<p><img alt="X_{l}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bl%7D" srcset="/img/loading.gif" lazyload>&nbsp;=&nbsp;<img alt="H_{l}" class="has" src="https://www.zhihu.com/equation?tex=H_%7Bl%7D" srcset="/img/loading.gif" lazyload>&nbsp;([&nbsp;<img alt="X_{0}" class="has" src="https://www.zhihu.com/equation?tex=X_%7B0%7D" srcset="/img/loading.gif" lazyload>&nbsp;,&nbsp;<img alt="X_{1}" class="has" src="https://www.zhihu.com/equation?tex=X_%7B1%7D" srcset="/img/loading.gif" lazyload>&nbsp;,…,&nbsp;<img alt="X_{l-1}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bl-1%7D" srcset="/img/loading.gif" lazyload>&nbsp;]),</p>
+
+<p>其中[]代表concatenation(拼接),既将&nbsp;<img alt="X_{0}" class="has" src="https://www.zhihu.com/equation?tex=X_%7B0%7D" srcset="/img/loading.gif" lazyload>&nbsp;到&nbsp;<img alt="X_{l-1}" class="has" src="https://www.zhihu.com/equation?tex=X_%7Bl-1%7D" srcset="/img/loading.gif" lazyload>&nbsp;层的所有输出feature map按Channel组合在一起.这里所用到的非线性变换H为BN+ReLU+ Conv(3×3)的组合.</p>
+
+<blockquote>Pooling Layers</blockquote>
+
+<p>由于在DenseNet中需要对不同层的feature map进行cat操作,所以需要不同层的feature map保持相同的feature size,这就限制了网络中Down sampling的实现.为了使用Down sampling,作者将DenseNet分为多个Denseblock,如下图所示:</p>
+
+<p style="text-align:center;"><img alt="" class="has" height="137" src="https://img-blog.csdn.net/20180827164206908?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NJR0FJX0NTRE4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" lazyload width="632"></p>
+
+<p>在同一个Denseblock中要求feature size保持相同大小,在不同Denseblock之间设置transition layers实现Down sampling, 在作者的实验中transition layer由BN + Conv(1×1) ＋2×2 average-pooling组成.</p>
+
+<blockquote>Growth rate</blockquote>
+
+<p>在Denseblock中,假设每一个非线性变换H的输出为K个feature map, 那么第i层网络的输入便为K<em>0</em>+(i-1)×K, 这里我们可以看到DenseNet和现有网络的一个主要的不同点:DenseNet可以接受较少的特征图数量作为网络层的输出,如下图所示</p>
+
+<p style="text-align:center;"><img alt="" class="has" height="294" src="https://img-blog.csdn.net/20180827164238251?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NJR0FJX0NTRE4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" lazyload width="639"></p>
+
+<p>原因就是在同一个Denseblock中的每一层都与之前所有层相关联,如果我们把feature看作是一个Denseblock的全局状态,那么每一层的训练目标便是通过现有的全局状态,判断需要添加给全局状态的更新值.因而每个网络层输出的特征图数量K又称为Growth rate,同样决定着每一层需要给全局状态更新的信息的多少.我们之后会看到,在作者的实验中只需要较小的K便足以实现state-of-art的性能.</p>
+
+<blockquote>Bottleneck Layers</blockquote>
+
+<p>虽然DenseNet接受较少的k,也就是feature map的数量作为输出,但由于不同层feature map之间由cat操作组合在一起,最终仍然会是feature map的channel较大而成为网络的负担.作者在这里使用1×1 Conv(Bottleneck)作为特征降维的方法来降低channel数量,以提高计算效率.经过改善后的非线性变换变为BN-ReLU-Conv(1×1)-BN-ReLU-Conv(3×3),使用Bottleneck layers的DenseNet被作者称为DenseNet-B.在实验中,作者使用1×1卷积生成channel数量为4k的feature map.</p>
+
+<blockquote>Compression</blockquote>
+
+<p>为了进一步优化模型的简洁性,我们同样可以在transition layer中降低feature map的数量.若一个Denseblock中包含m个feature maps,那么我们使其输出连接的transition layer层生成⌊θm⌋个输出feature map.其中θ为Compression factor, 当θ=1时,transition layer将保留原feature维度不变.</p>
+
+<p>作者将使用compression且θ=0.5的DenseNet命名为DenseNet-C, 将使用Bottleneck和compression且θ=0.5的DenseNet命名为DenseNet-BC</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="t2"></a><strong>三、 算法分析</strong></h2>
+
+<blockquote>(1) Model compactness</blockquote>
+
+<p>由于DenseNet对输入进行cat操作,一个直观的影响就是每一层学到的feature map都能被之后所有层直接使用,这使得特征可以在整个网络中重用,也使得模型更加简洁.</p>
+
+<p style="text-align:center;"><img alt="" class="has" height="217" src="https://img-blog.csdn.net/20180827164317605?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NJR0FJX0NTRE4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" lazyload width="638"></p>
+
+<p>从上图中我们可以看出DenseNet的参数效率:左图包含了对多种DenseNet结构参数和最终性能的统计,我们可以看出当模型实现相同的test error时,原始的DenseNet往往要比DenseNet-BC拥有2-3倍的参数量.中间图为DenseNet-BC与ResNet的对比,在相同的模型精度下,DenseNet-BC只需要ResNet约三分之一的参数数量.右图为1001层超过10M参数量的ResNet与100层只有0.8M参数量的DenseNet-BC在训练时的对比,虽然他们在约相同的训练epoch时收敛,但DenseNet-BC却只需要ResNet不足十分之一的参数量.</p>
+
+<blockquote>(2) Implicit Deep Supervision</blockquote>
+
+<p>解释DenseNet为何拥有如此高性能的另一个原因是网络中的每一层不仅接受了原始网络中来自loss的监督,同时由于存在多个bypass与shortcut,网络的监督是多样的.Deep supervision的优势同样在deeply-supervised nets (DSN)中也被证实.(DSN中每一个Hidden layer都有一个分类器,强迫其学习一些有区分度的特征).与DSN不同的是,DenseNet拥有单一的loss function, 模型构造和梯度计算更加简易.</p>
+
+<blockquote>(3) Feature Reuse</blockquote>
+
+<p>在设计初,DenseNet便被设计成让一层网络可以使用所有之前层网络feature map的网络结构,为了探索feature的复用情况,作者进行了相关实验.作者训练的L=40,K=12的DenseNet,对于任意Denseblock中的所有卷积层,计算之前某层feature map在该层权重的绝对值平均数.这一平均数表明了这一层对于之前某一层feature的利用率,下图为由该平均数绘制出的热力图:</p>
+
+<p style="text-align:center;"><img alt="" class="has" height="370" src="https://img-blog.csdn.net/20180827164359337?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NJR0FJX0NTRE4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" lazyload width="762"></p>
+
+<p>从图中我们可以得出以下结论:</p>
+
+<p>a) 一些较早层提取出的特征仍可能被较深层直接使用</p>
+
+<p>b) 即使是Transition layer也会使用到之前Denseblock中所有层的特征</p>
+
+<p>c) 第2-3个Denseblock中的层对之前Transition layer利用率很低,说明transition layer输出大量冗余特征.这也为DenseNet-BC提供了证据支持,既Compression的必要性.</p>
+
+<p>d) 最后的分类层虽然使用了之前Denseblock中的多层信息,但更偏向于使用最后几个feature map的特征,说明在网络的最后几层,某些high-level的特征可能被产生.</p>
+
+<p>&nbsp;</p>
+
+<h2><a name="t3"></a><strong>四、实验结果</strong></h2>
+
+<p>作者在多个benchmark数据集上训练了多种DenseNet模型,并与state-of-art的模型(主要是ResNet和其变种)进行对比:</p>
+
+<p style="text-align:center;"><img alt="" class="has" height="502" src="https://img-blog.csdn.net/20180827164443120?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1NJR0FJX0NTRE4=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" srcset="/img/loading.gif" lazyload width="812"></p>
+
+<p>由上表我们可以看出,DenseNet只需要较小的Growth rate(12,24)便可以实现state-of-art的性能,结合了Bottleneck和Compression的DenseNet-BC具有远小于ResNet及其变种的参数数量,且无论DenseNet或者DenseNet-BC,都在原始数据集和增广数据集上实现了超越ResNet的性能.</p>
+
+<p>&nbsp;</p>
+
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/02/03/%E5%9B%BE%E5%83%8F%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0%E4%B8%AD%E7%9A%84PSNR%E5%92%8CSSIM%E7%9A%84%E5%AE%9A%E4%B9%89%EF%BC%8C%E5%85%AC%E5%BC%8F%E5%92%8C%E5%90%AB%E4%B9%89/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">图像质量评估中的PSNR和SSIM的定义，公式和含义</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/06/10/C%20C++%E4%B8%AD%E5%85%B3%E4%BA%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%EF%BC%8Cextern%EF%BC%8Cstatic%EF%BC%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E6%80%BB%E7%BB%93/">
+                        <span class="hidden-mobile">C C++中关于全局变量静态变量，extern，static，const的区别与总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "4l4KDMQ2rUvohNwf2pd0A3MP-gzGzoHsz",
+          app_key: "Kd9Pm7FejmvkWARe5jtfgoVp",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
