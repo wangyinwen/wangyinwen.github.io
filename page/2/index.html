@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>归档 - Hexo</title>
+  <title>Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -48,7 +48,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 100vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -142,18 +142,22 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/plane.png') no-repeat center center;
+         style="background: url('/img/beach.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="Welcome to Wang Yinwen's personal homepage">
               
             </span>
 
             
           </div>
 
+          
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
           
         </div>
       </div>
@@ -164,30 +168,66 @@
     
       <div class="container nopadding-x-md">
         <div class="py-5" id="board"
-          >
+          style=margin-top:0>
           
           <div class="container">
             <div class="row">
               <div class="col-12 col-md-10 m-auto">
                 
 
-<div class="list-group">
-  <p class="h4">共计 11 篇文章</p>
-  <hr>
-  
-  
+
+  <div class="row mx-auto index-card">
     
-      
-      <p class="h5">2019</p>
     
-    <a href="/2019/03/22/%E6%95%B0%E5%AD%97%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E6%A8%A1%E6%8B%9F%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E5%92%8C%E5%BD%92%E4%B8%80%E5%8C%96%E8%A7%92%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%8C%E5%8F%8AFFT%E9%A2%91%E7%8E%87%E5%92%8C%E5%AE%9E%E9%99%85%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%E5%88%86%E6%9E%90/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">数字角频率和模拟角频率和物理频率和归一化角频率的关系，及FFT频率和实际物理频率的关系分析</span>
-      <time style="float: right;">03-22</time>
-    </a>
-  
-</div>
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/03/22/%E6%95%B0%E5%AD%97%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E6%A8%A1%E6%8B%9F%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E5%92%8C%E5%BD%92%E4%B8%80%E5%8C%96%E8%A7%92%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%8C%E5%8F%8AFFT%E9%A2%91%E7%8E%87%E5%92%8C%E5%AE%9E%E9%99%85%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%E5%88%86%E6%9E%90/" target="_self">
+          数字角频率和模拟角频率和物理频率和归一化角频率的关系，及FFT频率和实际物理频率的关系分析
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2019/03/22/%E6%95%B0%E5%AD%97%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E6%A8%A1%E6%8B%9F%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E5%92%8C%E5%BD%92%E4%B8%80%E5%8C%96%E8%A7%92%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%8C%E5%8F%8AFFT%E9%A2%91%E7%8E%87%E5%92%8C%E5%AE%9E%E9%99%85%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%E5%88%86%E6%9E%90/" target="_self">
+          
+          
+            
+          
+          4种频率及其数量关系实际物理频率表示AD采集物理信号的频率，fs为采样频率，由奈奎斯特采样定理可以知道，fs必须≥信号最高频率的2倍才不会发生信号混叠，因此fs能采样到的信号最高频率为fs/2。
+Ω角频率是物理频率f的2*pi倍，这个也称模拟频率。
+归一化频率是将物理频率按fs归一化之后的结果，最高的信号频率为fs/2对应归一化频率0.5，这也就是为什么在matlab的fdtool工具中归一化频率
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-03-22 21:29" pubdate>
+              2019-03-22
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/FFT/">FFT</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
 
 
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </span>
+  </nav>
 
 
 
