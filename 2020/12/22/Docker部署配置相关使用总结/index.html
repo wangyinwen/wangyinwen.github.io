@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      662 字
+      1.8k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      21
        分钟
     </span>
   
@@ -228,7 +228,56 @@
             <h1 style="display: none">Docker部署配置相关使用总结</h1>
             
             <div class="markdown-body">
-              <h2 id="Docker部署配置相关使用总结"><a href="#Docker部署配置相关使用总结" class="headerlink" title="Docker部署配置相关使用总结"></a>Docker部署配置相关使用总结</h2><ul>
+              <h2 id="Docker部署配置相关使用总结"><a href="#Docker部署配置相关使用总结" class="headerlink" title="Docker部署配置相关使用总结"></a>Docker部署配置相关使用总结</h2><h3 id="创建并启动容器"><a href="#创建并启动容器" class="headerlink" title="创建并启动容器"></a>创建并启动容器</h3><p>使用 <code>docker run</code> 命令来创建并启动一个容器：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> docker run -it centos /bin/<span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;hello world&#x27;</span></span><br>hello world<br></code></pre></td></tr></table></figure>
+
+<p><code>-t</code> 参数让 Docker 分配一个伪终端，并绑定到容器的标准输入上，<code>-i</code> 参数让容器的标准输入持续打开。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> docker ps -a</span><br>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES<br>df84684c3888        centos              &quot;/bin/echo &#x27;hello wo…&quot;   10 seconds ago      Exited (0) 7 seconds ago                       admiring_noyce<br></code></pre></td></tr></table></figure>
+
+<p><code>docker ps</code> 命令列出当前的容器，可以看到，刚刚执行的容器输出完信息之后就直接退出了。那有没有办法让容器在后台执行呢？答案当然是可以的。</p>
+<p>使用 <code>-d</code> 参数让容器在后台，以守护进程的方式执行，这也是在工作中最常用到的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> docker run -d centos /bin/sh -c <span class="hljs-string">&quot;while true; do echo hello world; sleep 1; done&quot;</span></span><br>fcb07a324388d58883e212ff5675ad7947a22c731f677d1a37ff7bc3d8bfa9a7<br><br><span class="hljs-meta">$</span><span class="bash"> docker ps</span><br>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES<br>fcb07a324388        centos              &quot;/bin/sh -c &#x27;while t…&quot;   6 seconds ago       Up 5 seconds                            beautiful_northcutt<br></code></pre></td></tr></table></figure>
+
+<p>这样容器就在后台运行了。</p>
+<p>还有一种方式，使用 <code>docker create</code> 命令创建容器，然后使用 <code>docker start</code> 来启动容器，两条命令相当于 <code>docker run</code> 一条，这种方式不常用，就不做更多介绍了。</p>
+<p>下面聊聊 <code>docker run</code> 背后的故事，到底这一条命令背后，Docker 都为我们做了哪些操作呢？</p>
+<ul>
+<li>检查本地是否存在指定镜像，不存在就从公有仓库下载；</li>
+<li>使用镜像创建并启动一个容器；</li>
+<li>分配一个文件系统，并在只读的镜像层外面挂载一层可读写层；</li>
+<li>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中；</li>
+<li>从地址池配置一个 IP 地址给容器；</li>
+<li>执行用户指定的命令或应用程序；</li>
+<li>执行完毕后容器被终止。</li>
+</ul>
+<h3 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h3><p>当容器以后台方式执行时，使用 <code>docker exec</code> 命令进入到容器中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> docker ps</span><br>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES<br>fcb07a324388        centos              &quot;/bin/sh -c &#x27;while t…&quot;   6 seconds ago       Up 5 seconds                            beautiful_northcutt<br><br><span class="hljs-meta">$</span><span class="bash"> docker <span class="hljs-built_in">exec</span> -it fcb07a324388 /bin/bash</span><br>[root@fcb07a324388 /]# ls<br>bin  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var<br>[root@fcb07a324388 /]#<br></code></pre></td></tr></table></figure>
+
+<p>进入到容器之后，就是一个 Linux 系统，Linux 支持的命令，容器也基本都支持。</p>
+<p>这条命令还是比较重要的，有时候我们的应用出问题了，单纯通过 logs 看不出问题的话，就需要我们进入容器，来看看实际情况。</p>
+<p>想退出的话，直接 <code>exit</code> 命令就可以了。</p>
+<p>还有一个命令是 <code>docker attach</code>，但是它有一个缺点。当多个窗口同时 attach 到同一个容器时，所有窗口都会同步显示，当某个窗口因命令阻塞时，其他窗口也无法执行操作。</p>
+<p>所以，这个命令现在基本也不用了。</p>
+<h3 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h3><p>使用 <code>docker stop</code> 命令来停止一个容器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> docker stop fcb</span><br>fcb<br><span class="hljs-meta">$</span><span class="bash"> docker ps -a</span><br>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                       PORTS               NAMES<br>fcb07a324388        centos              &quot;/bin/sh -c &#x27;while t…&quot;   23 minutes ago      Exited (137) 4 seconds ago                       beautiful_northcutt<br></code></pre></td></tr></table></figure>
+
+<p>如果再想启动的话，使用 <code>docker start</code>。</p>
+<h3 id="查看容器"><a href="#查看容器" class="headerlink" title="查看容器"></a>查看容器</h3><p>上文已经介绍过了，使用 <code>docker ps</code> 命令查看当前容器。</p>
+<p>使用 <code>docker logs</code> 查看容器日志输出。</p>
+<p>使用 <code>docker container inspect</code> 命令查看容器的详细信息。</p>
+<p>使用 <code>docker top</code> 命令查看容器内进程信息，类似 Linux 下的 top 命令。</p>
+<p>使用 <code>docker stats</code> 命令查看容器 CPU，内存，储存等信息。</p>
+<p>使用 <code>docker container port</code> 查看容器的端口映射情况。</p>
+<h3 id="导入和导出容器"><a href="#导入和导出容器" class="headerlink" title="导入和导出容器"></a>导入和导出容器</h3><p>使用 <code>docker export</code> 命令导出一个容器到文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> docker ps</span><br>CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES<br>fcb07a324388        centos              &quot;/bin/sh -c &#x27;while t…&quot;   34 minutes ago      Up 9 minutes                            beautiful_northcutt<br><span class="hljs-meta">$</span><span class="bash"> docker <span class="hljs-built_in">export</span> -o centos.tar fcb</span><br><span class="hljs-meta">$</span><span class="bash"> ls</span><br>centos.tar<br></code></pre></td></tr></table></figure>
+
+<p>使用 <code>docker import</code> 命令将容器文件导入成本地镜像。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> docker import centos.tar <span class="hljs-built_in">test</span>/centos</span><br>sha256:f994c062dae063ffb8c97191d951b9beaac73d99023120191dbbc9741d725578<br><span class="hljs-meta">$</span><span class="bash"> docker images</span><br>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE<br>test/centos         latest              f994c062dae0        6 seconds ago       237MB<br></code></pre></td></tr></table></figure>
+
+<p>在上一篇文章中介绍了一个 <code>docker load</code> 命令，同样是将文件导入成本地镜像，那二者有什么区别呢？</p>
+<p>容器快照文件将丢弃所有历史记录和元数据信息，而镜像存储文件将保存完整记录，但体积更大。</p>
+<h3 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h3><p>使用 <code>docker rm</code> 命令来删除已经停止的容器，如果容器正在运行，可以加 <code>-f</code> 参数进行强制删除。</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
 <li><p>docker 删除container或删除images<br>删除所有不在运行的容器docker rm $(docker ps -a -q)<br>暂停容器 docker stop +ID<br>删除镜像 docker rmi +ID或者docker image rm<br>Docker添加环境变量，不是用RUN export的方式，这种方式只在当前层有效，而ENV是贯穿所有setp的<br>ENV http_proxy http:<br>ENV https_proxy http:</p>
 </li>
 <li><p>关于这行命令<code>docker build -t iris-classifier $saved_path</code><br>先说<code>$</code>是表示<code>$</code>后面的是一个变量，如果不加则是saved_path字符串<br>参数<code>-t</code>是指定name和tag，例如：<code>ner-service:latest</code>,冒号前是name，冒号后是tag，默认是使用当前路径下的Dockerfile文件进行构建，如果文件不在当前路径或者名字不叫Dockerfile，则用-f进行指定。$saved_path是指构建image的时候用到的文件，如果在当前目录下也需要传一个.<br>这个命令会把Dockerfile和当前文件夹的文件传到deamon，生成一个image再传回本地，但是这个image不会以实体文件的形式存在当前目录下，他只是和其他docker run文件一样放在其他地方，通过docker images可以查看当前所有的images。如果想保存则可以使用save命令</p>

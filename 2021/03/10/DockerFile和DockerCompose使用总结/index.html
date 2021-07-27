@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>python日志管理工具logging如何消除重复打印问题，以及在项目中如何应用 - Hexo</title>
+  <title>DockerFile和DockerCompose使用总结 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="python日志管理工具logging如何消除重复打印问题，以及在项目中如何应用">
+            <span class="h2" id="subtitle" title="DockerFile和DockerCompose使用总结">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-04-22 15:22" pubdate>
-        2021年4月22日 下午
+      <time datetime="2021-03-10 18:30" pubdate>
+        2021年3月10日 晚上
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      458 字
+      847 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      10
        分钟
     </span>
   
@@ -225,24 +225,48 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">python日志管理工具logging如何消除重复打印问题，以及在项目中如何应用</h1>
+            <h1 style="display: none">DockerFile和DockerCompose使用总结</h1>
             
             <div class="markdown-body">
-              <h2 id="有这样一篇文章是解决重复打印的"><a href="#有这样一篇文章是解决重复打印的" class="headerlink" title="有这样一篇文章是解决重复打印的"></a>有这样一篇文章是解决重复打印的</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011417820/article/details/112861970">https://blog.csdn.net/u011417820/article/details/112861970</a></p>
-<ul>
-<li>问题二其实不用考虑，因为不会有人在一个脚本里创建两个logger</li>
-<li>问题一重复打印的问题，可以通过传递__name__或者if判断句柄两个其一进行解决，传递__name__就是为了避免生成相同name的logger对象，就会重复logg.addhandler，其实通过if判断句柄也可以达到相同的效果</li>
-<li>关于为什么非要用一个类封装，一方面是面向对象的编程模式，另一方面也是为了以后可以扩展，其实也可以用一个函数代替，比如下面的例子</li>
-</ul>
-<h2 id="如何在项目中实际应用"><a href="#如何在项目中实际应用" class="headerlink" title="如何在项目中实际应用"></a>如何在项目中实际应用</h2><ul>
-<li><p>除了封装成class，也可以</p>
-<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">import</span> logging<br><span class="hljs-keyword">import</span> <span class="hljs-type">time</span><br><span class="hljs-keyword">import</span> os<br><br><br>def create_logger(<span class="hljs-type">name</span>, output_dir=<span class="hljs-string">&#x27;.log&#x27;</span>)<br>	logger = logging.getLogger(<span class="hljs-type">name</span>)<br>	logger.setLevel(logging,<span class="hljs-keyword">INFO</span>)<br>	formatter = logging.Formatter(&quot;%(asctime)s - %(levelname)s - %(filename)s[:%(lineno)d] - %(message)s&quot;)<br>	<br>	# <span class="hljs-keyword">log</span> <span class="hljs-keyword">to</span> file<br>	os.makedirs(output_dir, exist_ok=<span class="hljs-keyword">True</span>)<br>	<span class="hljs-type">timestamp</span> = <span class="hljs-type">time</span>.strftime(&quot;%Y%m%d-%H%M%S&quot;, <span class="hljs-type">time</span>.<span class="hljs-built_in">localtime</span>())<br>	filename = os.path.<span class="hljs-keyword">join</span>(output_dir, f<span class="hljs-string">&#x27;&#123;timestamp&#125;.log&#x27;</span>)<br>	fh = logging.FileHandler(filename)<br>	fh.setFormatter(formatter)<br>	logger.addHandler(fh)<br>	<br>	# <span class="hljs-keyword">log</span> <span class="hljs-keyword">to</span> console<br>	ch = logging.StreamHandler()<br>	ch.setFormatter(formatter)<br>	logger.addHandler(ch)<br>	<br>	<span class="hljs-keyword">return</span> logger<br><br><span class="hljs-keyword">Copy</span><br></code></pre></td></tr></table></figure></li>
-<li><p>但是有一个问题是，如果在多个文件中调用，就会多次执行</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">fh</span> = logging.FileHandler(filename)<br></code></pre></td></tr></table></figure>
+              <h2 id="DockerFile"><a href="#DockerFile" class="headerlink" title="DockerFile"></a>DockerFile</h2><h3 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment"># 1、第一行必须是 FROM 基础镜像信息</span><br><span class="hljs-keyword">FROM</span> ubuntu<br> <br><span class="hljs-comment"># 2、维护者信息</span><br><span class="hljs-keyword">MAINTAINER</span> docker_user docker_user@email.com<br> <br><span class="hljs-comment"># 3、镜像操作指令</span><br><span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;deb http://archive.ubuntu.com/ubuntu/ raring main universe&quot;</span> &gt;&gt; /etc/apt/sources.list</span><br><span class="hljs-keyword">RUN</span><span class="bash"> apt-get update &amp;&amp; apt-get install -y nginx</span><br><span class="hljs-keyword">RUN</span><span class="bash"> <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;\ndaemon off;&quot;</span> &gt;&gt; /etc/nginx/nginx.conf</span><br> <br><span class="hljs-comment"># 4、容器启动执行指令</span><br><span class="hljs-keyword">CMD</span><span class="bash"> /usr/sbin/nginx</span><br></code></pre></td></tr></table></figure>
 
-<p>创建出多个log文件，因为不同文件传进来的__name__是不一样的，如果想只创建一个log文件，可以不传入name，改用句柄判断如下：</p>
-<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">import logging<br>import time<br>import os<br><br><br>def create<span class="hljs-constructor">_logger(<span class="hljs-params">output_dir</span>=&#x27;.<span class="hljs-params">log</span>&#x27;)</span><br>	logger = logging.get<span class="hljs-constructor">Logger()</span><br>	logger.set<span class="hljs-constructor">Level(<span class="hljs-params">logging</span>,INFO)</span><br>	formatter = logging.<span class="hljs-constructor">Formatter(<span class="hljs-string">&quot;%(asctime)s - %(levelname)s - %(filename)s[:%(lineno)d] - %(message)s&quot;</span>)</span><br>	<span class="hljs-keyword">if</span> not logger.has<span class="hljs-constructor">Handlers()</span>:<br>        # log <span class="hljs-keyword">to</span> file<br>        os.makedirs(output_dir, exist_ok=True)<br>        timestamp = time.strftime(<span class="hljs-string">&quot;%Y%m%d-%H%M%S&quot;</span>, time.localtime<span class="hljs-literal">()</span>)<br>        filename = os.path.join(output_dir, f&#x27;&#123;timestamp&#125;.log&#x27;)<br>        fh = logging.<span class="hljs-constructor">FileHandler(<span class="hljs-params">filename</span>)</span><br>        fh.set<span class="hljs-constructor">Formatter(<span class="hljs-params">formatter</span>)</span><br>        logger.add<span class="hljs-constructor">Handler(<span class="hljs-params">fh</span>)</span><br><br>        # log <span class="hljs-keyword">to</span> console<br>        ch = logging.<span class="hljs-constructor">StreamHandler()</span><br>        ch.set<span class="hljs-constructor">Formatter(<span class="hljs-params">formatter</span>)</span><br>        logger.add<span class="hljs-constructor">Handler(<span class="hljs-params">ch</span>)</span><br>	<br>	return logger<br></code></pre></td></tr></table></figure></li>
-</ul>
+<p>Dockerfile 基本就长这样，当然这是一个很简单的例子，还有很多其他命令会在下个小节介绍。</p>
+<p>有几点需要注意，第一行必须是 FROM 命令，表示是基于哪个基础镜像来创建镜像的。第二行一般是 MAINTAINER 命令，表示维护人信息，但不做硬性要求。最后一行是 CMD 命令，表示启动容器执行的命令，CMD 命令必须在最后一行，如果有多个 CMD 命令，则只有最后一个生效。</p>
+<h3 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h3><p><strong>FROM：</strong> 必须是 Dockerfile 的首个命令，定义了使用哪个基础镜像启动构建流程。</p>
+<p><strong>MAINTAINER：</strong> 声明镜像作者。</p>
+<p><strong>COPY：</strong> 将宿主机的文件拷贝到镜像内的指定路径。</p>
+<p><strong>ADD：</strong> 作用类似于 <strong>COPY</strong>。</p>
+<p><strong>COPY</strong> 和 <strong>ADD</strong> 的区别是：<strong>ADD</strong> 命令功能更多，比如拷贝一个压缩包，<strong>ADD</strong> 可以将压缩包解压到镜像内，如果是下载链接，<strong>ADD</strong> 会先下载文件，然后再拷贝。</p>
+<p>但现在 docker 官方更推荐使用 <strong>COPY</strong> 命令，一个命令只做一件事。</p>
+<p><strong>WORKDIR：</strong> 指定 Dockerfile 中该命令下的操作所在的工作目录。</p>
+<p><strong>RUN：</strong> 执行命令行命令。</p>
+<p><strong>ENV：</strong> 设置环境变量。</p>
+<p><strong>VOLUME：</strong> 挂载数据卷。</p>
+<p><strong>EXPOSE：</strong> 暴露端口。</p>
+<p><strong>CMD：</strong> 服务启动命令。</p>
+<h3 id="创建镜像"><a href="#创建镜像" class="headerlink" title="创建镜像"></a>创建镜像</h3><p>有了 Dockerfile 之后，在 Dockerfile 所在目录执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> docker build -t &lt;image_name&gt; .</span><br></code></pre></td></tr></table></figure>
+
+<p>就这么简单，镜像就创建好了。</p>
+<h2 id="DockerCompose"><a href="#DockerCompose" class="headerlink" title="DockerCompose"></a>DockerCompose</h2><h3 id="使用-docker-compose-部署-Redis-服务"><a href="#使用-docker-compose-部署-Redis-服务" class="headerlink" title="使用 docker-compose 部署 Redis 服务"></a>使用 docker-compose 部署 Redis 服务</h3><p>项目 Docker 化部署的最后一步，就差 Redis 了。本来以为是一件很简单的事，没想到折腾了我大半天的时间，下面就来分享分享我的采坑经历。</p>
+<p>docker-compose 文件：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">redis:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">redis:3.2.12</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">redis</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">network_mode:</span> <span class="hljs-string">host</span><br>    <span class="hljs-attr">command:</span> <span class="hljs-string">redis-server</span> <span class="hljs-string">/etc/redis.conf</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">6379</span><span class="hljs-string">:6379</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data:/data</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./redis.conf:/etc/redis.conf</span><br></code></pre></td></tr></table></figure>
+
+<p>当前目录下执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">#</span><span class="bash"> docker-compose up</span><br></code></pre></td></tr></table></figure>
+
+<p>本来以为服务一启，事情就这么愉快的结束了，但是，报错。</p>
+<blockquote>
+<p>Can’t open the log file: No such file or directory</p>
+</blockquote>
+<p>原因就是 redis.conf 文件直接用的是在物理机上部署时用的，<code>logfile</code> 参数配的是 <code>/var/lib/redis</code>，但 docker 容器里没有这个目录，但是有 <code>/data</code> 目录，所以，把 <code>logfile</code> 配置成 <code>/data</code> 即可。</p>
+<p>改完之后再一启，没有任何信息输出，看来是成功了。</p>
+<p><code>docker ps</code> 看看，没有容器。</p>
+<p>这下给我整懵了，咋回事呢？其实报错都不怕，就怕启动不成功，还没有报错信息。</p>
+<p>就这个问题给我折腾了好久，突然灵光一闪，想到 redis 会不会是以后台进程起的，导致容器直接退出。</p>
+<p>检查一下配置文件中的 <code>daemonize</code> 参数，果然是 <code>yes</code>。改成 <code>no</code> 之后，就可以正常启动了。</p>
+<p>就这么个破问题，卡了这么长时间，而且这类问题之前还遇到过，真是让人郁闷。</p>
+<p>至此，项目中的所有服务就都 Docker 化部署了。</p>
 
             </div>
             <hr>
@@ -253,7 +277,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/logging/">logging</a>
+                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
                     
                   </div>
                 
@@ -270,9 +294,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/06/06/%E5%9C%A8python%E4%B8%AD%E4%BD%BF%E7%94%A8Ansible%E5%AE%9E%E7%8E%B0Devops%E7%9A%84%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93/">
+                      <a href="/2021/04/22/python%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7logging%E5%A6%82%E4%BD%95%E6%B6%88%E9%99%A4%E9%87%8D%E5%A4%8D%E6%89%93%E5%8D%B0%E9%97%AE%E9%A2%98%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%9C%A8%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%A6%82%E4%BD%95%E5%BA%94%E7%94%A8/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">在python中使用Ansible实现Devops的相关总结</span>
+                        <span class="hidden-mobile">python日志管理工具logging如何消除重复打印问题，以及在项目中如何应用</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -280,8 +304,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/03/10/DockerFile%E5%92%8CDockerCompose%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/">
-                        <span class="hidden-mobile">DockerFile和DockerCompose使用总结</span>
+                      <a href="/2021/03/10/kubernetes%EF%BC%88k8s%EF%BC%89%E4%B9%8Byaml%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/">
+                        <span class="hidden-mobile">kubernetes（k8s）之yaml文件详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
