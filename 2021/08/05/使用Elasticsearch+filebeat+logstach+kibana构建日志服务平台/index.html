@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      628 字
+      819 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      8
+      11
        分钟
     </span>
   
@@ -261,23 +261,33 @@
 </li>
 </ul>
 <h2 id="Logstach安装以及使用"><a href="#Logstach安装以及使用" class="headerlink" title="Logstach安装以及使用"></a>Logstach安装以及使用</h2><ul>
-<li>二进制安装，解压即用</li>
-<li>部署命令：<code>bin/logstash -f config/xxx.yml</code></li>
-<li>测试config文件是否写的正确<code>bin/logstash -t -f config/xxx.yml</code></li>
-<li></li>
+<li><p>二进制安装，解压即用</p>
+</li>
+<li><p>可以用root用户启动</p>
+</li>
+<li><p>部署命令：<code>bin/logstash -f config/xxx.yml</code></p>
+</li>
+<li><p>测试config文件是否写的正确<code>bin/logstash -t -f config/xxx.yml</code></p>
+</li>
+<li><p>配置logstash自动刷新配置文件：<code>bin/logstash -f config/xxx.yml --config.reload.automatic  </code></p>
+</li>
+<li><p>配置文件如下：</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">inputs</span> &#123;<br>  beats &#123;<br>    <span class="hljs-attr">port</span> =&gt; <span class="hljs-number">5044</span><br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">filter</span> &#123;<br>  <span class="hljs-keyword">if</span> [log][file][<span class="hljs-built_in">path</span>] == <span class="hljs-string">&quot;/usr/local/dashuaibi/log/wang.log&quot;</span>&#123;<br>    dissect &#123;<br>      <span class="hljs-attr">mapping</span> =&gt; &#123;<br>        <span class="hljs-string">&quot;message&quot;</span> =&gt; <span class="hljs-string">&quot;%&#123;wang_time&#125; %&#123;wang_pid&#125; %&#123;wang_level&#125; %&#123;comtent&#125;&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">output</span> &#123;<br>  <span class="hljs-keyword">if</span> [log][file][<span class="hljs-built_in">path</span>] == <span class="hljs-string">&quot;/usr/local/dashuaibi/log/wang.log&quot;</span>&#123;<br>    elasticsearch &#123;<br>      <span class="hljs-attr">hosts</span> =&gt; <span class="hljs-string">&quot;10.1.1.186:9200&quot;</span><br>      <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;wang_test_666&quot;</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意：mapping里的分隔符表达式，最后一个字段默认会把后面所有的内容都接收下来</p>
+</li>
 </ul>
 <h2 id="Elasticsearch安装以及使用"><a href="#Elasticsearch安装以及使用" class="headerlink" title="Elasticsearch安装以及使用"></a>Elasticsearch安装以及使用</h2><ul>
 <li>二进制安装，解压即用</li>
 <li><code>vim config/elasticsearch.yml</code>，将<code>network.host: 0.0.0.0</code>,让外部可以访问到</li>
 <li>启动命令：<code>bin/elasticsearch</code></li>
+<li>ES不能使用root用户启动</li>
 </ul>
 <h2 id="Kibana安装以及使用"><a href="#Kibana安装以及使用" class="headerlink" title="Kibana安装以及使用"></a>Kibana安装以及使用</h2><ul>
-<li><p>二进制安装，解压即用</p>
-</li>
-<li><p><code>vim config/elasticsearch.yml</code>，将<code>server.host：0.0.0.0</code>,让外部可以访问到</p>
-</li>
-<li><p>启动命令：<code>.bin/kibana</code>,注意这个.必须带</p>
-</li>
+<li>二进制安装，解压即用</li>
+<li><code>vim config/elasticsearch.yml</code>，将<code>server.host：0.0.0.0</code>,让外部可以访问到</li>
+<li>启动命令：<code>.bin/kibana</code>,注意这个.必须带</li>
+<li>Kibana也不能使用root用户启动,但是根据提示，好像有开关可以控制使用root启动</li>
 </ul>
 
             </div>
