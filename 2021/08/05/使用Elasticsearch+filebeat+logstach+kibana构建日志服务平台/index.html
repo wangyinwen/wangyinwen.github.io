@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      819 字
+      873 字
     </span>
   
 
@@ -278,15 +278,20 @@
 </li>
 </ul>
 <h2 id="Elasticsearch安装以及使用"><a href="#Elasticsearch安装以及使用" class="headerlink" title="Elasticsearch安装以及使用"></a>Elasticsearch安装以及使用</h2><ul>
-<li>二进制安装，解压即用</li>
+<li>二进制安装，解压即用<code>tar -zxf xxx.tar.gz</code></li>
+<li>先在root用户下修改权限<code>chown -R elastic:elastic elastic</code><ul>
+<li>最后一个elastic是文件夹的名字</li>
+<li>-R表示处理指定目录以及其子目录下的所有文件</li>
+</ul>
+</li>
 <li><code>vim config/elasticsearch.yml</code>，将<code>network.host: 0.0.0.0</code>,让外部可以访问到</li>
 <li>启动命令：<code>bin/elasticsearch</code></li>
 <li>ES不能使用root用户启动</li>
 </ul>
 <h2 id="Kibana安装以及使用"><a href="#Kibana安装以及使用" class="headerlink" title="Kibana安装以及使用"></a>Kibana安装以及使用</h2><ul>
 <li>二进制安装，解压即用</li>
-<li><code>vim config/elasticsearch.yml</code>，将<code>server.host：0.0.0.0</code>,让外部可以访问到</li>
-<li>启动命令：<code>.bin/kibana</code>,注意这个.必须带</li>
+<li><code>vim config/kibana.yml</code>，将<code>server.host：&quot;0.0.0.0&quot;</code>,让外部可以访问到</li>
+<li>启动命令：<code>./bin/kibana</code>,注意这个.必须带</li>
 <li>Kibana也不能使用root用户启动,但是根据提示，好像有开关可以控制使用root启动</li>
 </ul>
 
