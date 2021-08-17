@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      873 字
+      1.1k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      13
        分钟
     </span>
   
@@ -293,6 +293,15 @@
 <li><code>vim config/kibana.yml</code>，将<code>server.host：&quot;0.0.0.0&quot;</code>,让外部可以访问到</li>
 <li>启动命令：<code>./bin/kibana</code>,注意这个.必须带</li>
 <li>Kibana也不能使用root用户启动,但是根据提示，好像有开关可以控制使用root启动</li>
+</ul>
+<h2 id="如何在脚本里启动filebeat"><a href="#如何在脚本里启动filebeat" class="headerlink" title="如何在脚本里启动filebeat"></a>如何在脚本里启动filebeat</h2><ul>
+<li><p>前提背景：有一些场景是需要在脚本里自动启动的 ，且希望在后台运行，所以我想到了nohup</p>
+<p><code>nohup ./filebeat -e -c /usr/local/sahoc/filebeat.yml &amp;</code></p>
+<p>这个做法可以后台起一个进程运行filebeat，但是主进程不会退出，<strong>因为启动的filebeat在另一个进程里有终端输出</strong></p>
+</li>
+<li><p>解决方案：<code>nohup ./filebeat -e -c /usr/local/sahoc/filebeat.yml &gt;&gt; $FILEBEAT_LOG 2&gt;&amp;1 &amp;</code></p>
+<p>这样把终端的输出重定向到一个文件，主进程就不会持续监听了，注意2&gt;&amp;1必须加，必须把所有的输出都追加到文件，文件地址可以是/dev/null</p>
+</li>
 </ul>
 
             </div>
