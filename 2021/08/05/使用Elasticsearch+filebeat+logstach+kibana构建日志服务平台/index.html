@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.6k 字
+      1.8k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      20
+      22
        分钟
     </span>
   
@@ -332,7 +332,15 @@
 </ul>
 <h3 id="如果一行数据，用指定的分割方式没有分割出来怎么办"><a href="#如果一行数据，用指定的分割方式没有分割出来怎么办" class="headerlink" title="如果一行数据，用指定的分割方式没有分割出来怎么办"></a>如果一行数据，用指定的分割方式没有分割出来怎么办</h3><p>直接把这个数据添加到message里，并不会丢弃</p>
 <h3 id="如果之前我们的filebeat的input-yml文件有一段时间为空，后面再加上还能正常工作吗？"><a href="#如果之前我们的filebeat的input-yml文件有一段时间为空，后面再加上还能正常工作吗？" class="headerlink" title="如果之前我们的filebeat的input.yml文件有一段时间为空，后面再加上还能正常工作吗？"></a>如果之前我们的filebeat的input.yml文件有一段时间为空，后面再加上还能正常工作吗？</h3><p>可以</p>
-<h3 id="采用上面的方案会导致，每次有新的数据加入log文件，都会把之前的所有内容再重新传一遍，导致重复采集"><a href="#采用上面的方案会导致，每次有新的数据加入log文件，都会把之前的所有内容再重新传一遍，导致重复采集" class="headerlink" title="采用上面的方案会导致，每次有新的数据加入log文件，都会把之前的所有内容再重新传一遍，导致重复采集"></a>采用上面的方案会导致，每次有新的数据加入log文件，都会把之前的所有内容再重新传一遍，导致重复采集</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain"><br></code></pre></td></tr></table></figure>
+<h3 id="采用上面的方案会导致，每次有新的数据加入log文件，都会把之前的所有内容再重新传一遍，导致重复采集"><a href="#采用上面的方案会导致，每次有新的数据加入log文件，都会把之前的所有内容再重新传一遍，导致重复采集" class="headerlink" title="采用上面的方案会导致，每次有新的数据加入log文件，都会把之前的所有内容再重新传一遍，导致重复采集"></a>采用上面的方案会导致，每次有新的数据加入log文件，都会把之前的所有内容再重新传一遍，导致重复采集</h3><ul>
+<li>问题出在vim编辑器，用echo添加就不会有问题，估计是vim保存的时候创建了一个新的文件或者链接</li>
+<li>参考：<a target="_blank" rel="noopener" href="https://elasticsearch.cn/question/2533">https://elasticsearch.cn/question/2533</a></li>
+</ul>
+<blockquote>
+<p>vi指令保存后,会重复发送,用echo写东西测试没问题，类似vi估计都会有问题。官方论坛翻译内容如下：</p>
+<p>你怎么修改文件。你试过了$ echo ‘new line’ &gt;&gt; /usr/src/app/log.log吗？filebeat试图根据元数据来检测文件是否是新的。一些工具/编辑器创建一个全新的文件保存并取消旧链接。这被filebeat检测为新文件，迫使它重新发送所有内容。</p>
+</blockquote>
+
             </div>
             <hr>
             <div>
