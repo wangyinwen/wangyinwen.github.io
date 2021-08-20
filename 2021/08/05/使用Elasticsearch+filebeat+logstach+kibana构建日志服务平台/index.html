@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.8k 字
+      2k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      22
+      26
        分钟
     </span>
   
@@ -340,7 +340,19 @@
 <p>vi指令保存后,会重复发送,用echo写东西测试没问题，类似vi估计都会有问题。官方论坛翻译内容如下：</p>
 <p>你怎么修改文件。你试过了$ echo ‘new line’ &gt;&gt; /usr/src/app/log.log吗？filebeat试图根据元数据来检测文件是否是新的。一些工具/编辑器创建一个全新的文件保存并取消旧链接。这被filebeat检测为新文件，迫使它重新发送所有内容。</p>
 </blockquote>
-<p>1</p>
+<h3 id="上面使用-log-file-path-不太严谨"><a href="#上面使用-log-file-path-不太严谨" class="headerlink" title="上面使用[log][file][path]不太严谨"></a>上面使用<code>[log][file][path]</code>不太严谨</h3><ul>
+<li><p>如果不同机器上有不同的业务，但是log文件名都一样，这样就会把这些日志放在一个索引，其实不应该放在一起</p>
+</li>
+<li><p>采用打tags的方式解决</p>
+</li>
+<li><p>filebeat_input.yml文件里加入tag</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span><br><br>  <span class="hljs-comment"># Change to true to enable this input configuration.</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br><br>  <span class="hljs-comment"># Paths that should be crawled and fetched. Glob based paths.</span><br>  <span class="hljs-attr">paths:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">/usr/local/xxx</span><br>  <span class="hljs-attr">tags:</span> <span class="hljs-string">wang1</span><br>  <span class="hljs-attr">fields:</span> <br>    <span class="hljs-attr">source:</span> <span class="hljs-string">wang_test</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">log</span><br><br>  <span class="hljs-comment"># Change to true to enable this input configuration.</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br><br>  <span class="hljs-comment"># Paths that should be crawled and fetched. Glob based paths.</span><br>  <span class="hljs-attr">paths:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">/usr/local/xxx</span><br>  <span class="hljs-attr">tags:</span> <span class="hljs-string">wang2</span><br>  <span class="hljs-attr">fields:</span> <br>    <span class="hljs-attr">source:</span> <span class="hljs-string">wang_test</span><br></code></pre></td></tr></table></figure>
+
+<p>tags后面的值可以不带引号</p>
+</li>
+<li><p>logstash配置文件根据这个tag去做相应的处理</p>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">inputs</span> &#123;<br>  beats &#123;<br>    <span class="hljs-attr">port</span> =&gt; <span class="hljs-number">5044</span><br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">filter</span> &#123;<br>  <span class="hljs-keyword">if</span> <span class="hljs-string">&quot;wang1&quot;</span> <span class="hljs-keyword">in</span> [tags]&#123;<br>    dissect &#123;<br>      <span class="hljs-attr">mapping</span> =&gt; &#123;<br>        <span class="hljs-string">&quot;message&quot;</span> =&gt; <span class="hljs-string">&quot;%&#123;wang_time&#125; %&#123;wang_pid&#125; %&#123;wang_level&#125; %&#123;comtent&#125;&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">output</span> &#123;<br>  <span class="hljs-keyword">if</span> <span class="hljs-string">&quot;wang1&quot;</span> <span class="hljs-keyword">in</span> [tags]&#123;<br>    elasticsearch &#123;<br>      <span class="hljs-attr">hosts</span> =&gt; <span class="hljs-string">&quot;10.1.1.186:9200&quot;</span><br>      <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;wang_test_666&quot;</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
+</ul>
 
             </div>
             <hr>
