@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      2.1k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      26
+      27
        分钟
     </span>
   
@@ -278,21 +278,38 @@
 </li>
 </ul>
 <h2 id="Elasticsearch安装以及使用"><a href="#Elasticsearch安装以及使用" class="headerlink" title="Elasticsearch安装以及使用"></a>Elasticsearch安装以及使用</h2><ul>
-<li>二进制安装，解压即用<code>tar -zxf xxx.tar.gz</code></li>
-<li>先在root用户下修改权限<code>chown -R elastic:elastic elastic</code><ul>
+<li><p>二进制安装，解压即用<code>tar -zxf xxx.tar.gz</code></p>
+</li>
+<li><p>先在root用户下修改权限<code>chown -R elastic:elastic elastic</code></p>
+<ul>
 <li>最后一个elastic是文件夹的名字</li>
 <li>-R表示处理指定目录以及其子目录下的所有文件</li>
 </ul>
 </li>
-<li><code>vim config/elasticsearch.yml</code>，将<code>network.host: 0.0.0.0</code>,让外部可以访问到</li>
-<li>启动命令：<code>bin/elasticsearch</code></li>
-<li>ES不能使用root用户启动</li>
+<li><p><code>vim config/elasticsearch.yml</code>，将<code>network.host: 0.0.0.0</code>,让外部可以访问到</p>
+</li>
+<li><p>启动命令：<code>bin/elasticsearch</code></p>
+</li>
+<li><p>ES不能使用root用户启动</p>
+</li>
+<li><p>可以在创建ES索引的时候指定分片的参数,wangtest是要创建的索引名</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">PUT</span> <span class="hljs-string">wangtest</span><br>&#123;<br>  <span class="hljs-attr">&quot;settings&quot;:</span> &#123;<br>    <span class="hljs-attr">&quot;index&quot;:</span> &#123;<br>      <span class="hljs-attr">&quot;number_of_shards&quot;:</span> <span class="hljs-number">3</span>,<br>      <span class="hljs-attr">&quot;number_of_replicas&quot;:</span> <span class="hljs-number">1</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="Kibana安装以及使用"><a href="#Kibana安装以及使用" class="headerlink" title="Kibana安装以及使用"></a>Kibana安装以及使用</h2><ul>
 <li>二进制安装，解压即用</li>
 <li><code>vim config/kibana.yml</code>，将<code>server.host：&quot;0.0.0.0&quot;</code>,让外部可以访问到</li>
 <li>启动命令：<code>./bin/kibana</code>,注意这个.必须带</li>
 <li>Kibana也不能使用root用户启动,但是根据提示，好像有开关可以控制使用root启动</li>
+</ul>
+<h2 id="监控软件cerebro的安装和使用"><a href="#监控软件cerebro的安装和使用" class="headerlink" title="监控软件cerebro的安装和使用"></a>监控软件cerebro的安装和使用</h2><ul>
+<li><p>下载压缩包，解压</p>
+</li>
+<li><p>bin/cerebro</p>
+</li>
+<li><p>非必须：如果经常使用的话，可以先在<code>conf/application.conf</code>中配置好ElasticSearch服务器地址</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs nix"><span class="hljs-attr">hosts</span> = [<br>  &#123;<br>    <span class="hljs-attr">host</span> = <span class="hljs-string">&quot;http://localhost:9200&quot;</span><br>    <span class="hljs-attr">name</span> = <span class="hljs-string">&quot;Some Cluster&quot;</span><br>  &#125;<br>]<br></code></pre></td></tr></table></figure></li>
+<li><p>参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/433d821f9667">https://www.jianshu.com/p/433d821f9667</a></p>
+</li>
 </ul>
 <h2 id="如何在脚本里启动filebeat"><a href="#如何在脚本里启动filebeat" class="headerlink" title="如何在脚本里启动filebeat"></a>如何在脚本里启动filebeat</h2><ul>
 <li><p>前提背景：有一些场景是需要在脚本里自动启动的 ，且希望在后台运行，所以我想到了nohup</p>
