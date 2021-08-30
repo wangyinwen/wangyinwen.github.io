@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      27
+      28
        分钟
     </span>
   
@@ -287,6 +287,8 @@
 </ul>
 </li>
 <li><p><code>vim config/elasticsearch.yml</code>，将<code>network.host: 0.0.0.0</code>,让外部可以访问到</p>
+</li>
+<li><p><code>vim config/elasticsearch.yml</code>，将<code>cluster.initial_master_nodes: [&quot;node-1&quot;]</code>这行的注释打开</p>
 </li>
 <li><p>启动命令：<code>bin/elasticsearch</code></p>
 </li>
