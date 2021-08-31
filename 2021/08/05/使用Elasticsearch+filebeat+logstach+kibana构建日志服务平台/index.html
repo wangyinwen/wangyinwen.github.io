@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.1k 字
+      2.2k 字
     </span>
   
 
@@ -288,7 +288,7 @@
 </li>
 <li><p><code>vim config/elasticsearch.yml</code>，将<code>network.host: 0.0.0.0</code>,让外部可以访问到</p>
 </li>
-<li><p><code>vim config/elasticsearch.yml</code>，将<code>cluster.initial_master_nodes: [&quot;node-1&quot;]</code>这行的注释打开</p>
+<li><p><code>vim config/elasticsearch.yml</code>，将<code>cluster.initial_master_nodes: [&quot;node-1&quot;]</code>这行的注释打开，有几个节点就在list里写几个值，否则master节点会一直搜索另一个节点，”node-1”是本台机器的hostname,需要提前在/etc/hosts里定义（如果默认没有添加的话），文件里写的是ip + hostname</p>
 </li>
 <li><p>启动命令：<code>bin/elasticsearch</code></p>
 </li>

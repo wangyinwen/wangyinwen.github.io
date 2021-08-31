@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>Elasticsearch集群部署的相关问题记录 - Hexo</title>
+  <title>Elasticsearch查询相关总结以及timestamp和时区问题 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Elasticsearch集群部署的相关问题记录">
+            <span class="h2" id="subtitle" title="Elasticsearch查询相关总结以及timestamp和时区问题">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-08-20 16:16" pubdate>
-        2021年8月20日 下午
+      <time datetime="2021-08-25 16:16" pubdate>
+        2021年8月25日 下午
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      762 字
+      333 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9
+      4
        分钟
     </span>
   
@@ -225,52 +225,36 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Elasticsearch集群部署的相关问题记录</h1>
+            <h1 style="display: none">Elasticsearch查询相关总结以及timestamp和时区问题</h1>
             
             <div class="markdown-body">
-              <h2 id="ElasticSearch相关的端口"><a href="#ElasticSearch相关的端口" class="headerlink" title="ElasticSearch相关的端口"></a>ElasticSearch相关的端口</h2><ul>
-<li>ES：9200。作为http协议，主要用于外部通信</li>
-<li>ES：9300。作为TCP协议，jar之间就是通过 tcp协议通信，ES集群之间通过9300通信</li>
-<li>Kibana：5601</li>
-<li>Logstash：5044</li>
-<li>cerebro: 9000</li>
-</ul>
-<h2 id="ES启动时遇到的问题"><a href="#ES启动时遇到的问题" class="headerlink" title="ES启动时遇到的问题"></a>ES启动时遇到的问题</h2><p><strong>问题：</strong></p>
-<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs smali">ERROR: [2] bootstrap checks failed.You must address the points described in the following [2] lines before starting Elasticsearch.<br>bootstrap<span class="hljs-built_in"> check </span>failure [1] of [2]:max file descriptors [4096] for elasticsearch process is too low,increase to at least [65535]<br>bootstrap<span class="hljs-built_in"> check </span>failure [2] of [2]:max virtual memory areas vm.max_map_count [65530] is too low,increase to at least [262144]<br>ERROR: Elasticsearch did<span class="hljs-built_in"> not </span>exit normally -<span class="hljs-built_in"> check </span>the logs at /root/elasticsearch-7.13.3/logs/sahoc_es.log<br></code></pre></td></tr></table></figure>
-
-<p><strong>解决方案</strong></p>
-<ol>
-<li><p>编辑/etc/sysctl.conf,追加下面的内容</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">vm.max_map_count</span>=<span class="hljs-number">655360</span><br><span class="hljs-attr">net.core.somaxconn</span>=<span class="hljs-number">60000</span><br></code></pre></td></tr></table></figure>
-
-<p>执行<code>sysctl -p</code></p>
-<p>vm.max_map_count代表限制一个进程可以拥有的VMA（虚拟内存区域）的数量</p>
-<blockquote>
-<p>net.core.somaxconn 介绍<br>1）概念介绍<br>  对于一个TCP链接，Server与Client需要通过三次握手来建立网络链接，当三次握手成功之后，我们就可以看到端口状态由LISTEN转为ESTABLISHED，接着这条链路上就可以开始传送数据了</p>
-<p>net.core.somaxconn是Linux中的一个内核(kernel)参数，表示socket监听(listen)的backlog上限。<br>什么是backlog？backlog就是socket的监听队列，当一个请求(request)尚未被处理或者建立时，它就会进入backlog。<br>而socket server可以一次性处理backlog中的所有请求，处理后的请求不再位于监听队列中。<br>当Server处理请求较慢时，导致监听队列被填满后，新来的请求就会被拒绝。</p>
-<p>2）补充<br>Linux系统中，该参数的值默认是128<br>如果Linux系统中部署了经常处理新请求(request)的高负载的服务，那么显然这个值是需要增加到更合适的值的</p>
-</blockquote>
-</li>
-<li><p>编辑/etc/security/limits.conf,追加一下内容</p>
-<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc"><span class="hljs-bullet">* </span>sotf nofile 65536<br><span class="hljs-bullet">* </span>hard nofile 65536<br></code></pre></td></tr></table></figure>
-
-<p>linux资源限制配置文件是/etc/security/limits.conf；限制用户进程的数量对于linux系统的稳定性非常重要。 limits.conf文件限制着用户可以使用的最大文件数，最大线程，最大内存等资源使用量。</p>
-<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs mel">* <span class="hljs-keyword">soft</span> nofile <span class="hljs-number">655350</span>  #任何用户可以打开的最大的文件描述符数量，默认<span class="hljs-number">1024</span>，这里的数值会限制tcp连接<br>* hard nofile <span class="hljs-number">655350</span><br>* <span class="hljs-keyword">soft</span> nproc  <span class="hljs-number">655350</span>  #任何用户可以打开的最大进程数<br>* hard nproc  <span class="hljs-number">650000</span><br><br>@student hard nofile <span class="hljs-number">65535</span><br>@student <span class="hljs-keyword">soft</span> nofile <span class="hljs-number">4096</span><br>@student hard nproc <span class="hljs-number">50</span>  #学生组中的任何人不能拥有超过<span class="hljs-number">50</span>个进程，并且会在拥有<span class="hljs-number">30</span>个进程时发出警告<br>@student <span class="hljs-keyword">soft</span> nproc <span class="hljs-number">30</span><br></code></pre></td></tr></table></figure>
-
+              <h2 id="ES查询相关"><a href="#ES查询相关" class="headerlink" title="ES查询相关"></a>ES查询相关</h2><p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/qdhxhz/p/11493677.html">https://www.cnblogs.com/qdhxhz/p/11493677.html</a></p>
 <ul>
-<li>hard和soft两个值都代表什么意思呢？ soft是一个警告值，而hard则是一个真正意义的阀值，超过就会报错</li>
-</ul>
-<p>参考：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1403636">https://cloud.tencent.com/developer/article/1403636</a></p>
+<li><p>如果想筛选出特定时间段的event，可以在查询语句里使用<code>post_filter</code></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs awk">POST <span class="hljs-regexp">/wangtest_re/</span>_search<br>&#123;<br>  <span class="hljs-string">&quot;post_filter&quot;</span>:&#123;<br>    <span class="hljs-string">&quot;range&quot;</span>: &#123;<br>      <span class="hljs-string">&quot;@timestamp&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;gte&quot;</span>: <span class="hljs-string">&quot;2012-08-01T15:00:00.000+800&quot;</span>,<br>        <span class="hljs-string">&quot;lte&quot;</span>: <span class="hljs-string">&quot;2012-08-01T15:00:00.000+800&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>  ...<br><br>&#125;<br></code></pre></td></tr></table></figure></li>
+<li><p>也可以把range写在query语句里，但是用户使用where语句的时候，也是放置在query里的，所以无法预知客户的输入，所以range语句放不进去</p>
 </li>
-</ol>
-<h2 id="ES内存相关（监控页面的heap）"><a href="#ES内存相关（监控页面的heap）" class="headerlink" title="ES内存相关（监控页面的heap）"></a>ES内存相关（监控页面的heap）</h2><p>参考：<a target="_blank" rel="noopener" href="https://elasticsearch.cn/article/32">https://elasticsearch.cn/article/32</a></p>
-<p>一般把ES内存设置为整台机器内存的一半</p>
-<p>如何修改ES内存？</p>
-<p>编辑conf/jvm.options文件</p>
-<p>把里面的</p>
-<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-Xms4g</span><br><span class="hljs-deletion">-Xmx4g</span><br></code></pre></td></tr></table></figure>
+<li><p>post_filter，是查询后再过滤的，因为不需要计算score，所以速度更快，而且数据会缓存</p>
+</li>
+</ul>
+<h2 id="时区问题"><a href="#时区问题" class="headerlink" title="时区问题"></a>时区问题</h2><p>参考：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022064788">https://segmentfault.com/a/1190000022064788</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lijingjingchn/article/details/100576088">https://blog.csdn.net/lijingjingchn/article/details/100576088</a></p>
+<ul>
+<li><p>时间戳：unix时间戳是从1970年1月1日（UTC/GMT的午夜）开始所经过的秒数，不考虑闰秒</p>
+</li>
+<li><p>因为给用户看UTC时间不合适，所以最好的做法是，让es输出时间戳，后台根据时间戳再转换成2021-12-12 12:12:12的格式</p>
+</li>
+</ul>
+<p>时间戳和时间转换代码：</p>
+<p><a target="_blank" rel="noopener" href="https://felix.blog.csdn.net/article/details/51355282">https://felix.blog.csdn.net/article/details/51355282</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#coding:UTF-8</span><br><span class="hljs-keyword">import</span> time<br><br>timestamp = <span class="hljs-number">1462451334</span> <span class="hljs-comment"># 如果需要格式转换，这里用float格式</span><br><br><span class="hljs-comment">#转换成localtime</span><br>time_local = time.localtime(timestamp)<br><span class="hljs-comment">#转换成新的时间格式(2016-05-05 20:28:54)</span><br>dt = time.strftime(<span class="hljs-string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>,time_local)<br><br><span class="hljs-built_in">print</span>(dt)<br><br><br></code></pre></td></tr></table></figure>
 
-<p>取消注释，并把4g改成8g即可，默认是1g</p>
+
+
+
+
+
+
 
             </div>
             <hr>
@@ -298,18 +282,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/08/25/Elasticsearch%E6%9F%A5%E8%AF%A2%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93%E4%BB%A5%E5%8F%8Atimestamp%E5%92%8C%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Elasticsearch查询相关总结以及timestamp和时区问题</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/08/05/%E4%BD%BF%E7%94%A8Elasticsearch+filebeat+logstach+kibana%E6%9E%84%E5%BB%BA%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/">
-                        <span class="hidden-mobile">使用Elasticsearch+filebeat+logstach+kibana构建日志服务平台</span>
+                      <a href="/2021/08/20/Elasticsearch%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E7%9A%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">
+                        <span class="hidden-mobile">Elasticsearch集群部署的相关问题记录</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
