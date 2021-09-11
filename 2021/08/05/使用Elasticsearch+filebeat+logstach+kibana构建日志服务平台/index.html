@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      28
+      29
        分钟
     </span>
   
@@ -272,7 +272,7 @@
 <li><p>配置logstash自动刷新配置文件：<code>bin/logstash -f config/xxx.conf --config.reload.automatic  </code></p>
 </li>
 <li><p>配置文件如下：</p>
-<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">inputs</span> &#123;<br>  beats &#123;<br>    <span class="hljs-attr">port</span> =&gt; <span class="hljs-number">5044</span><br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">filter</span> &#123;<br>  <span class="hljs-keyword">if</span> [log][file][<span class="hljs-built_in">path</span>] == <span class="hljs-string">&quot;/usr/local/dashuaibi/log/wang.log&quot;</span>&#123;<br>    dissect &#123;<br>      <span class="hljs-attr">mapping</span> =&gt; &#123;<br>        <span class="hljs-string">&quot;message&quot;</span> =&gt; <span class="hljs-string">&quot;%&#123;wang_time&#125; %&#123;wang_pid&#125; %&#123;wang_level&#125; %&#123;comtent&#125;&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">output</span> &#123;<br>  <span class="hljs-keyword">if</span> [log][file][<span class="hljs-built_in">path</span>] == <span class="hljs-string">&quot;/usr/local/dashuaibi/log/wang.log&quot;</span>&#123;<br>    elasticsearch &#123;<br>      <span class="hljs-attr">hosts</span> =&gt; <span class="hljs-string">&quot;10.1.1.186:9200&quot;</span><br>      <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;wang_test_666&quot;</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight puppet"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs puppet"><span class="hljs-keyword">input</span> &#123;<br>  beats &#123;<br>    <span class="hljs-attr">port</span> =&gt; <span class="hljs-number">5044</span><br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">filter</span> &#123;<br>  <span class="hljs-keyword">if</span> [log][file][<span class="hljs-built_in">path</span>] == <span class="hljs-string">&quot;/usr/local/dashuaibi/log/wang.log&quot;</span>&#123;<br>    dissect &#123;<br>      <span class="hljs-attr">mapping</span> =&gt; &#123;<br>        <span class="hljs-string">&quot;message&quot;</span> =&gt; <span class="hljs-string">&quot;%&#123;wang_time&#125; %&#123;wang_pid&#125; %&#123;wang_level&#125; %&#123;comtent&#125;&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">output</span> &#123;<br>  <span class="hljs-keyword">if</span> [log][file][<span class="hljs-built_in">path</span>] == <span class="hljs-string">&quot;/usr/local/dashuaibi/log/wang.log&quot;</span>&#123;<br>    elasticsearch &#123;<br>      <span class="hljs-attr">hosts</span> =&gt; <span class="hljs-string">&quot;10.1.1.186:9200&quot;</span><br>      <span class="hljs-attr">index</span> =&gt; <span class="hljs-string">&quot;wang_test_666&quot;</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>注意：mapping里的分隔符表达式，最后一个字段默认会把后面所有的内容都接收下来</p>
 </li>
@@ -287,6 +287,8 @@
 </ul>
 </li>
 <li><p><code>vim config/elasticsearch.yml</code>，将<code>network.host: 0.0.0.0</code>,让外部可以访问到</p>
+</li>
+<li><p><code>node.name: node-1</code>这行的注释也打开，下面这个操作要用</p>
 </li>
 <li><p><code>vim config/elasticsearch.yml</code>，将<code>cluster.initial_master_nodes: [&quot;node-1&quot;]</code>这行的注释打开，有几个节点就在list里写几个值，否则master节点会一直搜索另一个节点，”node-1”是本台机器的hostname,需要提前在/etc/hosts里定义（如果默认没有添加的话），文件里写的是ip + hostname</p>
 </li>
