@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>Elasticsearch查询相关总结以及timestamp和时区问题 - Hexo</title>
+  <title>Python3高并发定时更新任务进程池和线程池的使用 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Elasticsearch查询相关总结以及timestamp和时区问题">
+            <span class="h2" id="subtitle" title="Python3高并发定时更新任务进程池和线程池的使用">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-08-25 16:16" pubdate>
-        2021年8月25日 下午
+      <time datetime="2021-08-20 17:22" pubdate>
+        2021年8月20日 下午
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      333 字
+      682 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      7
        分钟
     </span>
   
@@ -225,36 +225,27 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Elasticsearch查询相关总结以及timestamp和时区问题</h1>
+            <h1 style="display: none">Python3高并发定时更新任务进程池和线程池的使用</h1>
             
             <div class="markdown-body">
-              <h2 id="ES查询相关"><a href="#ES查询相关" class="headerlink" title="ES查询相关"></a>ES查询相关</h2><p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/qdhxhz/p/11493677.html">https://www.cnblogs.com/qdhxhz/p/11493677.html</a></p>
-<ul>
-<li><p>如果想筛选出特定时间段的event，可以在查询语句里使用<code>post_filter</code></p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs awk">POST <span class="hljs-regexp">/wangtest_re/</span>_search<br>&#123;<br>  <span class="hljs-string">&quot;post_filter&quot;</span>:&#123;<br>    <span class="hljs-string">&quot;range&quot;</span>: &#123;<br>      <span class="hljs-string">&quot;@timestamp&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;gte&quot;</span>: <span class="hljs-string">&quot;2012-08-01T15:00:00.000+800&quot;</span>,<br>        <span class="hljs-string">&quot;lte&quot;</span>: <span class="hljs-string">&quot;2012-08-01T15:00:00.000+800&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>  ...<br><br>&#125;<br></code></pre></td></tr></table></figure></li>
-<li><p>也可以把range写在query语句里，但是用户使用where语句的时候，也是放置在query里的，所以无法预知客户的输入，所以range语句放不进去</p>
-</li>
-<li><p>post_filter，是查询后再过滤的，因为不需要计算score，所以速度更快，而且数据会缓存</p>
-</li>
+              <h2 id="Python3高并发定时更新任务进程池和线程池的使用"><a href="#Python3高并发定时更新任务进程池和线程池的使用" class="headerlink" title="Python3高并发定时更新任务进程池和线程池的使用"></a>Python3高并发定时更新任务进程池和线程池的使用</h2><ul>
+<li>背景：需要定时对数据库的某一张表做更新</li>
+<li>不管用多线程还是多进程只能利用当前一台机器的计算能力，可以考虑使用celery这样的工具，后期可以横向扩展celery的执行机，也不用考虑生产者消费者模型，celery里面自动都帮我们处理好了，也有消息队列的机制，我们只负责往里面丢任务即可</li>
 </ul>
-<h2 id="时区问题"><a href="#时区问题" class="headerlink" title="时区问题"></a>时区问题</h2><p>参考：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022064788">https://segmentfault.com/a/1190000022064788</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lijingjingchn/article/details/100576088">https://blog.csdn.net/lijingjingchn/article/details/100576088</a></p>
-<ul>
-<li><p>时间戳：unix时间戳是从1970年1月1日（UTC/GMT的午夜）开始所经过的秒数，不考虑闰秒</p>
-</li>
-<li><p>因为给用户看UTC时间不合适，所以最好的做法是，让es输出时间戳，后台根据时间戳再转换成2021-12-12 12:12:12的格式</p>
-</li>
+<h2 id="Django中connections-close-all-的作用"><a href="#Django中connections-close-all-的作用" class="headerlink" title="Django中connections.close_all()的作用"></a>Django中connections.close_all()的作用</h2><ul>
+<li>我们链接到mysql的时候，会创建一个链接，这个链接一般都有一个有效期，当新起一个进程的时候会fork父进程里的数据库链接文件，但是这些链接文件可能马上就失效了，万一在我们子进程的任务中突然有一个链接失效就会报错，所以在新起子进程的时候先执行一下这个命令，关闭旧链接，后面用了再创建自己的新链接即可</li>
+<li>数据库链接超时的报错不光有mysql gone away，还有各种游标报错，None类型报错等，都可能是由于链接超时或者错误关闭链接导致</li>
+<li>如果在子进程里使用了多进程，就会fork出好多链接文件，一不小心就会关闭还需要使用的链接，就会报错，建议传参的时候都穿hash_key，在子进程里再重新查询获取这个对象，这样这个对象的生命周期就可以自己掌控了</li>
+<li>但是创建多线程的时候不存在fork，基本不会有断联的情况</li>
 </ul>
-<p>时间戳和时间转换代码：</p>
-<p><a target="_blank" rel="noopener" href="https://felix.blog.csdn.net/article/details/51355282">https://felix.blog.csdn.net/article/details/51355282</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#coding:UTF-8</span><br><span class="hljs-keyword">import</span> time<br><br>timestamp = <span class="hljs-number">1462451334</span> <span class="hljs-comment"># 如果需要格式转换，这里用float格式</span><br><br><span class="hljs-comment">#转换成localtime</span><br>time_local = time.localtime(timestamp)<br><span class="hljs-comment">#转换成新的时间格式(2016-05-05 20:28:54)</span><br>dt = time.strftime(<span class="hljs-string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>,time_local)<br><br><span class="hljs-built_in">print</span>(dt)<br><br><br></code></pre></td></tr></table></figure>
+<h3 id="进程池的使用"><a href="#进程池的使用" class="headerlink" title="进程池的使用"></a>进程池的使用</h3><p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/kaituorensheng/p/4465768.html">https://www.cnblogs.com/kaituorensheng/p/4465768.html</a></p>
+<p>这个虽然使用的是Python2，但是给的例子里除了print加括号以外，都是可以正常使用的</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs go">#coding: utf<span class="hljs-number">-8</span><br><span class="hljs-keyword">import</span> multiprocessing<br><span class="hljs-keyword">import</span> time<br><br>def <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(msg)</span>:</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;msg:&quot;</span>, msg)<br>    time.sleep(<span class="hljs-number">3</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;end&quot;</span>)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    pool = multiprocessing.Pool(processes = <span class="hljs-number">3</span>)<br>    <span class="hljs-keyword">for</span> i in xrange(<span class="hljs-number">4</span>):<br>        msg = <span class="hljs-string">&quot;hello %d&quot;</span> %(i)<br>        pool.apply_async(<span class="hljs-function"><span class="hljs-keyword">func</span>, <span class="hljs-params">(msg, )</span>)   #维持执行的进程总数为<span class="hljs-title">processes</span>，当一个进程执行完毕后会添加新的进程进去</span><br><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Mark~ Mark~ Mark~~~~~~~~~~~~~~~~~~~~~~&quot;</span>)<br>    pool.<span class="hljs-built_in">close</span>()<br>    pool.join()   #调用join之前，先调用<span class="hljs-built_in">close</span>函数，否则会出错。执行完<span class="hljs-built_in">close</span>后不会有新的进程加入到pool,join函数等待所有子进程结束<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Sub-process(es) done.&quot;</span>)<br></code></pre></td></tr></table></figure>
 
-
-
-
-
-
-
+<h3 id="线程池的使用"><a href="#线程池的使用" class="headerlink" title="线程池的使用"></a>线程池的使用</h3><p>参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b9b3d66aa0be">https://www.jianshu.com/p/b9b3d66aa0be</a></p>
+<ul>
+<li>注意：进程池创建进程的时候，里面第二个参数是元祖，而创建线程池的时候，里面第二个参数就是普通的参数</li>
+</ul>
 
             </div>
             <hr>
@@ -265,7 +256,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Elasticsearch/">Elasticsearch</a>
+                      <a class="hover-with-bg" href="/tags/Docker/">Docker</a>
                     
                   </div>
                 
@@ -282,12 +273,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2021/08/25/Elasticsearch%E6%9F%A5%E8%AF%A2%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93%E4%BB%A5%E5%8F%8Atimestamp%E5%92%8C%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Elasticsearch查询相关总结以及timestamp和时区问题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/08/20/Python3%E9%AB%98%E5%B9%B6%E5%8F%91%E5%AE%9A%E6%97%B6%E6%9B%B4%E6%96%B0%E4%BB%BB%E5%8A%A1%E8%BF%9B%E7%A8%8B%E6%B1%A0%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E4%BD%BF%E7%94%A8/">
-                        <span class="hidden-mobile">Python3高并发定时更新任务进程池和线程池的使用</span>
+                      <a href="/2021/08/20/Elasticsearch%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E7%9A%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">
+                        <span class="hidden-mobile">Elasticsearch集群部署的相关问题记录</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
