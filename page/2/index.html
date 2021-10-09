@@ -361,6 +361,54 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2019/07/16/Django%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%9F%A5%E8%AF%A2%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8Amysql%20gone%20away%E9%97%AE%E9%A2%98/" target="_self">
+          Django多进程中的查询错乱问题以及mysql gone away问题
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2019/07/16/Django%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%9F%A5%E8%AF%A2%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8Amysql%20gone%20away%E9%97%AE%E9%A2%98/" target="_self">
+          
+          
+            
+          
+          
+Django多进程中的查询错乱问题因为业务需要，写了一个多进程程序，但是发现查询结果错乱，比如在同一个进程里输出Asset.object.get(ip=1.1.1.1).ip发现输出的并不是1.1.1.1
+初步感觉是django底层用的musql_db这个库是进程不安全的，也就是不支持多进程操作，所以这种情况最好用多线程
+
+关于mysql gone away的问题
+一开始我以为是connecti
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-07-16 15:23" pubdate>
+              2019-07-16
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Django/">Django</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2019/06/10/C%20C++%E4%B8%AD%E5%85%B3%E4%BA%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%EF%BC%8Cextern%EF%BC%8Cstatic%EF%BC%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E6%80%BB%E7%BB%93/" target="_self">
           C C++中关于全局变量静态变量，extern，static，const的区别与总结
         </a>
