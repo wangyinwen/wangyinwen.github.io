@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.6k 字
+      2.7k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      34
+      35
        分钟
     </span>
   
@@ -303,7 +303,7 @@
 </li>
 <li><p><code>node.name: node-1</code>这行的注释也打开，下面这个操作要用</p>
 </li>
-<li><p><code>vim config/elasticsearch.yml</code>，将<code>cluster.initial_master_nodes: [&quot;node-1&quot;]</code>这行的注释打开，有几个节点就在list里写几个值，否则master节点会一直搜索另一个节点，”node-1”是本台机器的hostname,需要提前在/etc/hosts里定义（如果默认没有添加的话），文件里写的是ip + hostname</p>
+<li><p><code>vim config/elasticsearch.yml</code>，将<code>cluster.initial_master_nodes: [&quot;node-1&quot;]</code>这行的注释打开，有几个节点就在list里写几个值，否则master节点会一直搜索另一个节点，”node-1”是本台机器的hostname,需要提前在/etc/hosts里定义（如果默认没有添加的话），文件里写的是ip + hostname（需要把ES集群里的每一个节点的信息都写在这个里面）</p>
 </li>
 <li><p>启动命令：<code>bin/elasticsearch</code></p>
 </li>

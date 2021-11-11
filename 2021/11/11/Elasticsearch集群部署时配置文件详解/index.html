@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>Elasticsearch集群部署时配置文件详解 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.10","typing":{"enable":true,"typeSpeed":70,"cursorChar":"...","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>王胤文的个人主页</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/city.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Elasticsearch集群部署时配置文件详解">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-11-11 16:16" pubdate>
+        2021年11月11日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      85
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Elasticsearch集群部署时配置文件详解</h1>
+            
+            <div class="markdown-body">
+              <h2 id="ElasticSearch配置文件解析"><a href="#ElasticSearch配置文件解析" class="headerlink" title="ElasticSearch配置文件解析"></a>ElasticSearch配置文件解析</h2><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br></pre></td><td class="code"><pre><code class="hljs clean">##################### Elasticsearch Configuration Example ##################### <br>#<br># 只是挑些重要的配置选项进行注释,其实自带的已经有非常细致的英文注释了!<br># https:<span class="hljs-comment">//www.elastic.co/guide/en/elasticsearch/reference/current/modules.html</span><br>#<br>################################### Cluster ################################### <br># 代表一个集群,集群中有多个节点,其中有一个为主节点,这个主节点是可以通过选举产生的,主从节点是对于集群内部来说的. <br># es的一个概念就是去中心化,字面上理解就是无中心节点,这是对于集群外部来说的,因为从外部来看es集群,在逻辑上是个整体,你与任何一个节点的通信和与整个es集群通信是等价的。 <br># cluster.name可以确定你的集群名称,当你的elasticsearch集群在同一个网段中elasticsearch会自动的找到具有相同cluster.name的elasticsearch服务. <br># 所以当同一个网段具有多个elasticsearch集群时cluster.name就成为同一个集群的标识. <br><br># cluster.name: elasticsearch <br><br>#################################### Node ##################################### <br># https:<span class="hljs-comment">//www.elastic.co/guide/en/elasticsearch/reference/5.1/modules-node.html#master-node</span><br># 节点名称同理,可自动生成也可手动配置. <br># node.name: node<span class="hljs-number">-1</span><br><br># 允许一个节点是否可以成为一个master节点,es是默认集群中的第一台机器为master,如果这台机器停止就会重新选举master. <br># node.master: true <br><br># 允许该节点存储数据(默认开启) <br># node.data: true <br><br># 配置文件中给出了三种配置高性能集群拓扑结构的模式,如下： <br># <span class="hljs-number">1.</span> 如果你想让节点从不选举为主节点,只用来存储数据,可作为负载器 <br># node.master: false <br># node.data: true <br># node.ingest: true  #默认true<br><br># <span class="hljs-number">2.</span> 如果想让节点成为主节点,且不存储任何数据,并保有空闲资源,可作为协调器 <br># node.master: true <br># node.data: false<br># node.ingest: true<br><br># <span class="hljs-number">3.</span> 如果想让节点既不称为主节点,又不成为数据节点,那么可将他作为搜索器,从节点中获取数据,生成搜索结果等 <br># node.master: false <br># node.data: false <br># node.ingest: true<br>#<br><br># <span class="hljs-number">4.</span> 仅作为协调器 <br># node.master: false <br># node.data: false<br># node.ingest: false<br><br># 监控集群状态有一下插件和API可以使用: <br># Use the Cluster Health API [http:<span class="hljs-comment">//localhost:9200/_cluster/health], the </span><br># Node Info API [http:<span class="hljs-comment">//localhost:9200/_nodes] or GUI tools # such as &lt;http://www.elasticsearch.org/overview/marvel/&gt;, </span><br><br><br># A node can have <span class="hljs-keyword">generic</span> attributes associated <span class="hljs-keyword">with</span> it, which can later be used <br># for customized shard allocation filtering, or allocation awareness. An attribute <br># is a simple key value pair, similar to node.key: value, here is an example: <br># 每个节点都可以定义一些与之关联的通用属性，用于后期集群进行碎片分配时的过滤<br># node.rack: rack314 <br><br># 默认情况下，多个节点可以在同一个安装路径启动，如果你想让你的es只启动一个节点，可以进行如下设置<br># node.max_local_storage_nodes: <span class="hljs-number">1</span> <br><br>#################################### Index #################################### <br># 设置索引的分片数,默认为<span class="hljs-number">5</span> <br>#index.number_of_shards: <span class="hljs-number">5</span> <br><br># 设置索引的副本数,默认为<span class="hljs-number">1</span>: <br>#index.number_of_replicas: <span class="hljs-number">1</span> <br><br># 配置文件中提到的最佳实践是,如果服务器够多,可以将分片提高,尽量将数据平均分布到大集群中去<br># 同时,如果增加副本数量可以有效的提高搜索性能 <br># 需要注意的是,<span class="hljs-string">&quot;number_of_shards&quot;</span> 是索引创建后一次生成的,后续不可更改设置 <br># <span class="hljs-string">&quot;number_of_replicas&quot;</span> 是可以通过API去实时修改设置的 <br><br>#################################### Paths #################################### <br># 配置文件存储位置 <br># path.conf: /path/to/conf <br><br># 数据存储位置(单个目录设置) <br># path.data: /path/to/data <br># 多个数据存储位置,有利于性能提升 <br># path.data: /path/to/data1,/path/to/data2 <br><br># 临时文件的路径 <br># path.work: /path/to/work <br><br># 日志文件的路径 <br># path.logs: /path/to/logs <br><br># 插件安装路径 <br># path.plugins: /path/to/plugins <br><br>#################################### Plugin ################################### <br># 设置插件作为启动条件,如果一下插件没有安装,则该节点服务不会启动 <br># plugin.mandatory: mapper-attachments,lang-groovy <br><br>################################### Memory #################################### <br># 当JVM开始写入交换空间时（swapping）ElasticSearch性能会低下,你应该保证它不会写入交换空间 <br># 设置这个属性为true来锁定内存,同时也要允许elasticsearch的进程可以锁住内存,linux下可以通过 `ulimit -l unlimited` 命令 <br># bootstrap.mlockall: true <br><br># 确保 ES_MIN_MEM 和 ES_MAX_MEM 环境变量设置为相同的值,以及机器有足够的内存分配给Elasticsearch <br># 注意:内存也不是越大越好,一般<span class="hljs-number">64</span>位机器,最大分配内存别才超过<span class="hljs-number">32</span>G <br><br>############################## Network And HTTP ############################### <br># 设置绑定的ip地址,可以是ipv4或ipv6的,默认为<span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span> <br># network.bind_host: <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>   #只有本机可以访问http接口<br><br># 设置其它节点和该节点交互的ip地址,如果不设置它会自动设置,值必须是个真实的ip地址 <br># network.publish_host: <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> <br><br># 同时设置bind_host和publish_host上面两个参数 <br># network.host: <span class="hljs-number">192.168</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>    #绑定监听IP<br><br># 设置节点间交互的tcp端口,默认是<span class="hljs-number">9300</span> <br># transport.tcp.port: <span class="hljs-number">9300</span> <br><br># 设置是否压缩tcp传输时的数据，默认为false,不压缩<br># transport.tcp.compress: true <br><br># 设置对外服务的http端口,默认为<span class="hljs-number">9200</span> <br># http.port: <span class="hljs-number">9200</span> <br><br># 设置请求内容的最大容量,默认<span class="hljs-number">100</span>mb <br># http.max_content_length: <span class="hljs-number">100</span>mb <br><br># 使用http协议对外提供服务,默认为true,开启 <br># http.enabled: false <br><br>###################### 使用head等插件监控集群信息，需要打开以下配置项 ###########<br># http.cors.enabled: true<br># http.cors.allow-origin: <span class="hljs-string">&quot;*&quot;</span><br># http.cors.allow-credentials: true<br><br>################################### Gateway ################################### <br># gateway的类型,默认为local即为本地文件系统,可以设置为本地文件系统 <br># gateway.type: local <br><br># 下面的配置控制怎样以及何时启动一整个集群重启的初始化恢复过程 <br># (当使用shard gateway时,是为了尽可能的重用local data(本地数据)) <br><br># 一个集群中的N个节点启动后,才允许进行恢复处理 <br># gateway.recover_after_nodes: <span class="hljs-number">1</span> <br><br># 设置初始化恢复过程的超时时间,超时时间从上一个配置中配置的N个节点启动后算起 <br># gateway.recover_after_time: <span class="hljs-number">5</span>m <br><br># 设置这个集群中期望有多少个节点.一旦这N个节点启动(并且recover_after_nodes也符合), <br># 立即开始恢复过程(不等待recover_after_time超时) <br># gateway.expected_nodes: <span class="hljs-number">2</span><br><br> ############################# Recovery Throttling ############################# <br># 下面这些配置允许在初始化恢复,副本分配,再平衡,或者添加和删除节点时控制节点间的分片分配 <br># 设置一个节点的并行恢复数 <br># <span class="hljs-number">1.</span>初始化数据恢复时,并发恢复线程的个数,默认为<span class="hljs-number">4</span> <br># cluster.routing.allocation.node_initial_primaries_recoveries: <span class="hljs-number">4</span> <br><br># <span class="hljs-number">2.</span>添加删除节点或负载均衡时并发恢复线程的个数,默认为<span class="hljs-number">2</span> <br># cluster.routing.allocation.node_concurrent_recoveries: <span class="hljs-number">2</span> <br><br># 设置恢复时的吞吐量(例如:<span class="hljs-number">100</span>mb,默认为<span class="hljs-number">0</span>无限制.如果机器还有其他业务在跑的话还是限制一下的好) <br># indices.recovery.max_bytes_per_sec: <span class="hljs-number">20</span>mb <br><br># 设置来限制从其它分片恢复数据时最大同时打开并发流的个数,默认为<span class="hljs-number">5</span> <br># indices.recovery.concurrent_streams: <span class="hljs-number">5</span> <br># 注意: 合理的设置以上参数能有效的提高集群节点的数据恢复以及初始化速度 <br><br>################################## Discovery ################################## <br># 设置这个参数来保证集群中的节点可以知道其它N个有master资格的节点.默认为<span class="hljs-number">1</span>,对于大的集群来说,可以设置大一点的值(<span class="hljs-number">2</span><span class="hljs-number">-4</span>) <br># discovery.zen.minimum_master_nodes: <span class="hljs-number">1</span> <br># 探查的超时时间,默认<span class="hljs-number">3</span>秒,提高一点以应对网络不好的时候,防止脑裂 <br># discovery.zen.ping.timeout: <span class="hljs-number">3</span>s <br><br># For more information, see <br># &lt;http:<span class="hljs-comment">//elasticsearch.org/guide/en/elasticsearch/reference/current/modules-discovery-zen.html&gt; </span><br><br># 设置是否打开多播发现节点.默认是true. <br># 当多播不可用或者集群跨网段的时候集群通信还是用单播吧 <br># discovery.zen.ping.multicast.enabled: false <br><br># 这是一个集群中的主节点的初始列表,当节点(主节点或者数据节点)启动时使用这个列表进行探测 <br># discovery.zen.ping.unicast.hosts: [<span class="hljs-string">&quot;host1&quot;</span>, <span class="hljs-string">&quot;host2:port&quot;</span>] <br><br># Slow Log部分与GC log部分略,不过可以通过相关日志优化搜索查询速度 <br><br>################  X-Pack ###########################################<br># 官方插件 相关设置请查看此处<br># https:<span class="hljs-comment">//www.elastic.co/guide/en/x-pack/current/xpack-settings.html</span><br># <br>############## Memory(重点需要调优的部分) ################ <br># Cache部分: <br># es有很多种方式来缓存其内部与索引有关的数据.其中包括filter cache <br><br># filter cache部分: <br># filter cache是用来缓存filters的结果的.默认的cache type是node type.node type的机制是所有的索引内部的分片共享filter cache.node type采用的方式是LRU方式.即:当缓存达到了某个临界值之后，es会将最近没有使用的数据清除出filter cache.使让新的数据进入es. <br><br># 这个临界值的设置方法如下：indices.cache.filter.size 值类型：eg.:<span class="hljs-number">512</span>mb <span class="hljs-number">20</span>%。默认的值是<span class="hljs-number">10</span>%。 <br><br># out <span class="hljs-keyword">of</span> memory错误避免过于频繁的查询时集群假死 <br># <span class="hljs-number">1.</span>设置es的缓存类型为Soft Reference,它的主要特点是据有较强的引用功能.只有当内存不够的时候,才进行回收这类内存,因此在内存足够的时候,它们通常不被回收.另外,这些引用对象还能保证在Java抛出OutOfMemory异常之前,被设置为null.它可以用于实现一些常用图片的缓存,实现Cache的功能,保证最大限度的使用内存而不引起OutOfMemory.在es的配置文件加上index.cache.field.type: soft即可. <br><br># <span class="hljs-number">2.</span>设置es最大缓存数据条数和缓存失效时间,通过设置index.cache.field.max_size: <span class="hljs-number">50000</span>来把缓存field的最大值设置为<span class="hljs-number">50000</span>,设置index.cache.field.expire: <span class="hljs-number">10</span>m把过期时间设置成<span class="hljs-number">10</span>分钟. <br># index.cache.field.max_size: <span class="hljs-number">50000</span> <br># index.cache.field.expire: <span class="hljs-number">10</span>m <br># index.cache.field.type: soft <br><br># field data部分&amp;&amp;circuit breaker部分： <br># 用于fielddata缓存的内存数量,主要用于当使用排序,faceting操作时,elasticsearch会将一些热点数据加载到内存中来提供给客户端访问,但是这种缓存是比较珍贵的,所以对它进行合理的设置. <br><br># 可以使用值：eg:<span class="hljs-number">50</span>mb 或者 <span class="hljs-number">30</span>％(节点 node heap内存量),默认是：unbounded #indices.fielddata.cache.size： unbounded <br># field的超时时间.默认是<span class="hljs-number">-1</span>,可以设置的值类型: <span class="hljs-number">5</span>m #indices.fielddata.cache.expire: <span class="hljs-number">-1</span> <br><br># circuit breaker部分: <br># 断路器是elasticsearch为了防止内存溢出的一种操作,每一种circuit breaker都可以指定一个内存界限触发此操作,这种circuit breaker的设定有一个最高级别的设定:indices.breaker.total.limit 默认值是JVM heap的<span class="hljs-number">70</span>%.当内存达到这个数量的时候会触发内存回收<br><br># 另外还有两组子设置： <br>#indices.breaker.fielddata.limit:当系统发现fielddata的数量达到一定数量时会触发内存回收.默认值是JVM heap的<span class="hljs-number">70</span>% <br>#indices.breaker.fielddata.overhead:在系统要加载fielddata时会进行预先估计,当系统发现要加载进内存的值超过limit * overhead时会进行进行内存回收.默认是<span class="hljs-number">1.03</span> <br>#indices.breaker.request.limit:这种断路器是elasticsearch为了防止OOM(内存溢出),在每次请求数据时设定了一个固定的内存数量.默认值是<span class="hljs-number">40</span>% <br>#indices.breaker.request.overhead:同上,也是elasticsearch在发送请求时设定的一个预估系数,用来防止内存溢出.默认值是<span class="hljs-number">1</span> <br><br># Translog部分: <br># 每一个分片(shard)都有一个transaction log或者是与它有关的预写日志,(write log),在es进行索引(index)或者删除(delete)操作时会将没有提交的数据记录在translog之中,当进行flush 操作的时候会将tranlog中的数据发送给Lucene进行相关的操作.一次flush操作的发生基于如下的几个配置 <br>#index.translog.flush_threshold_ops:当发生多少次操作时进行一次flush.默认是 unlimited #index.translog.flush_threshold_size:当translog的大小达到此值时会进行一次flush操作.默认是<span class="hljs-number">512</span>mb <br>#index.translog.flush_threshold_period:在指定的时间间隔内如果没有进行flush操作,会进行一次强制flush操作.默认是<span class="hljs-number">30</span>m #index.translog.interval:多少时间间隔内会检查一次translog,来进行一次flush操作.es会随机的在这个值到这个值的<span class="hljs-number">2</span>倍大小之间进行一次操作,默认是<span class="hljs-number">5</span>s <br>#index.gateway.local.sync:多少时间进行一次的写磁盘操作,默认是<span class="hljs-number">5</span>s <br><br></code></pre></td></tr></table></figure>
+
+<h1 id="集群不同角色节点的作用"><a href="#集群不同角色节点的作用" class="headerlink" title="集群不同角色节点的作用"></a>集群不同角色节点的作用</h1><h2 id="1、问题引出"><a href="#1、问题引出" class="headerlink" title="1、问题引出"></a><strong>1、问题引出</strong></h2><p>ES5.X节点类型多了ingest节点类型。<br>针对3个节点、5个节点或更多节点的集群，如何配置节点角色才能使得系统性能最优呢？<br><img src="http://mmbiz.qpic.cn/mmbiz_png/mjl8GCpsL9aPxRxTH2fbCEOw3byzeCo92STMTicSNzVLee4yvW0B3FyK0yRfib0AaWSHKZcpXf4vbKFHx92p49Pg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<h2 id="2、ES2-X及之前版本节点角色概述"><a href="#2、ES2-X及之前版本节点角色概述" class="headerlink" title="2、ES2.X及之前版本节点角色概述"></a><strong>2、ES2.X及之前版本节点角色概述</strong></h2><p><img src="http://mmbiz.qpic.cn/mmbiz_png/mjl8GCpsL9aPxRxTH2fbCEOw3byzeCo9OZlSUfeLBMggcsicsU5bDs1QC4yBBkxVuxALhhAznUmcRicRfYsDJciaA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<h2 id="3、ES5-X节点角色清单"><a href="#3、ES5-X节点角色清单" class="headerlink" title="3、ES5.X节点角色清单"></a><strong>3、ES5.X节点角色清单</strong></h2><p><img src="http://mmbiz.qpic.cn/mmbiz_png/mjl8GCpsL9aPxRxTH2fbCEOw3byzeCo9n4MClDPUOU1sga9yr59Uu5taSPibuTvEGttxlmt3wxpnXtL5X1NOk1Q/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>由于其他几种类型节点和用途都很好理解，无非主节点、数据节点、路由节点。</p>
+<p>Ingest的用途：<br>1）Ingest节点和集群中的其他节点一样，但是它能够创建多个处理器管道，用以修改传入文档。类似 最常用的Logstash过滤器已被实现为处理器。</p>
+<p>2）Ingest节点 可用于执行常见的数据转换和丰富。 处理器配置为管道。 在写入时，Ingest Node有20个内置处理器，例如grok，date，gsub，小写/大写，删除和重命名等。</p>
+<p>3）在批量请求或索引操作之前，Ingest节点拦截请求，并对文档进行处理。<br>这样的处理器的一个例子可以是日期处理器，其用于解析字段中的日期。<br>另一个例子是转换处理器，它将字段值转换为目标类型，例如将字符串转换为整数。</p>
+<h2 id="4、ES5-X节点组合类型有多种类型，如何设置？"><a href="#4、ES5-X节点组合类型有多种类型，如何设置？" class="headerlink" title="4、ES5.X节点组合类型有多种类型，如何设置？"></a><strong>4、ES5.X节点组合类型有多种类型，如何设置？</strong></h2><blockquote>
+<p><strong>Elasticsearch的员工 Christian_Dahlqvist解读如下：</strong><br>一个节点的缺省配置是：主节点+数据节点两属性为一身。对于3-5个节点的小集群来讲，通常让所有节点存储数据和具有获得主节点的资格。你可以将任何请求发送给任何节点，并且由于所有节点都具有集群状态的副本，它们知道如何路由请求。</p>
+<p>通常只有较大的集群才能开始分离专用主节点、数据节点。 对于许多用户场景，路由节点根本不一定是必需的。</p>
+<p>专用协调节点（也称为client节点或路由节点）从数据节点中消除了聚合/查询的请求解析和最终阶段，并允许他们专注于处理数据。 在多大程度上这对集群有好处将因情况而异。 通常我会说，在查询大量使用情况下路由节点更常见。</p>
+</blockquote>
+<h2 id="5、ES5-X集群中如何设置节点角色"><a href="#5、ES5-X集群中如何设置节点角色" class="headerlink" title="5、ES5.X集群中如何设置节点角色"></a><strong>5、ES5.X集群中如何设置节点角色</strong></h2><p>对于3个节点、5个节点甚至更多节点角色的配置，Elasticsearch官网、国内外论坛、博客都没有明确的定义。 </p>
+<p>开发实战中，我的配置如下（仅供参考讨论）<br><img src="http://mmbiz.qpic.cn/mmbiz_png/mjl8GCpsL9aPxRxTH2fbCEOw3byzeCo93mKJ66r9ykqbYPYzCqMhEq4ffUEDbY9EHXrYtlFZUJJb8h01QWZLibw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="图片"><br>注意：<em>以上截图中的英文都改为小写。</em></p>
+<p>我的思考如下：<br>1）对于Ingest节点，如果我们没有格式转换、类型转换等需求，直接设置为false。<br>2）3-5个节点属于轻量级集群，要保证主节点个数满足((节点数/2)+1)。<br>3）轻量级集群，节点的多重属性如：Master&amp;Data设置为同一个节点可以理解的。<br>4）如果进一步优化，5节点可以将Master和Data再分离，取消client节点。</p>
+<h2 id="6、小结"><a href="#6、小结" class="headerlink" title="6、小结"></a><strong>6、小结</strong></h2><p>1）Elasticsearch博大精深，尤其新的5.X特性比较多，需要进一步深入研究；<br>2）集群的配置还有赖于进一步实践总结，再好的理论不去实践都是“花瓶”；<br>3）貌似图示划分了这么细、写了那么多，<strong>以官网为基准</strong>，也顺带调研了N多文档，但对Ingest节点的作用依然理解的不够深。希望大家评论探讨下。</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903873153335309">https://juejin.cn/post/6844903873153335309</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI2NDY1MTA3OQ==&amp;mid=2247483896&amp;idx=1&amp;sn=c55b031b813ee4badbc10d62df84eaf0&amp;chksm=eaa829d0dddfa0c6fdd095abf55fd42f2a9cbc26ee61710f7d558f03143253ebdf5e0c73f0f2&amp;scene=21#wechat_redirect">https://mp.weixin.qq.com/s?__biz=MzI2NDY1MTA3OQ==&amp;mid=2247483896&amp;idx=1&amp;sn=c55b031b813ee4badbc10d62df84eaf0&amp;chksm=eaa829d0dddfa0c6fdd095abf55fd42f2a9cbc26ee61710f7d558f03143253ebdf5e0c73f0f2&amp;scene=21#wechat_redirect</a></p>
+<h1 id="关于-Elasticsearch-集群核心配置，腾讯大佬的灵魂9问，你能接住几个？"><a href="#关于-Elasticsearch-集群核心配置，腾讯大佬的灵魂9问，你能接住几个？" class="headerlink" title="关于 Elasticsearch 集群核心配置，腾讯大佬的灵魂9问，你能接住几个？"></a>关于 Elasticsearch 集群核心配置，腾讯大佬的灵魂9问，你能接住几个？</h1><h1 id="题记"><a href="#题记" class="headerlink" title="题记"></a>题记</h1><p>这是一位腾讯大佬 2020年4月份在死磕 Elasticsearch技术交流微信群里发起讨论的问题，之前初步讨论了答案，但是不够细或者说讲解不透，所以一直没有成文。</p>
+<p>这一次，加上了实践验证，说透。</p>
+<h1 id="1、上问题"><a href="#1、上问题" class="headerlink" title="1、上问题"></a>1、上问题</h1><p>还是没太搞懂 seed_hosts 和 cluster.initial_master_nodes 的区别。</p>
+<ul>
+<li>1、 seed_hosts里面一定是配置 master eligible节点吗?</li>
+<li>2、还是说data节点也可以配置到 master eligible</li>
+<li>3、是如何发现潜在机器的呢?</li>
+<li>4、initial_master一定是master eligible节点吧?</li>
+<li>5、集群初始启动时, 这几个节点一定都要在是吗?</li>
+<li>6 、初始的时候是不是可以配置一个, 然后集群初始化后, 再加master eligible节点也可以的是吗?</li>
+<li>7 、多加几个以后, 把initial_master里的几个去掉是不是也可以了?</li>
+<li>8、如果一个集群当前master为7，那他的quorum是4。es 是支持慢慢去掉节点，quorum慢慢降低的吗？</li>
+<li>9、 那假如慢慢去掉了3个节点，原集群正常工作，那这三个节点重启后网络分区在一起了，那会不会自己形成集群啊？</li>
+</ul>
+<p>希望大佬们点拨一下… …</p>
+<h1 id="2、拆解一把"><a href="#2、拆解一把" class="headerlink" title="2、拆解一把"></a>2、拆解一把</h1><p>问题的核心是：seed_host 和 cluster.initial_master_nodes 的区别？</p>
+<h2 id="2-0-认知前提"><a href="#2-0-认知前提" class="headerlink" title="2.0 认知前提"></a>2.0 认知前提</h2><p>为避免认知偏差，将常用英文词汇做基础释义：</p>
+<ul>
+<li>Discovery ：发现是节点间在形成集群之前发现其他节点的过程。当你启动Elasticsearch节点时，或者当节点认为主节点发生故障时，此过程将运行，并持续到找到主节点或选择新的主节点为止。</li>
+<li>master-eligible nodes：候选主节点</li>
+<li>master-ineligible nodes：非候选主节点</li>
+<li>coordinating-only nodes：仅协调节点</li>
+<li>data-only nodes：仅数据节点</li>
+<li>seed hosts providers：种子主机列表</li>
+<li>voting configuration：投票配置</li>
+<li>split brain：脑裂</li>
+<li>initial quorum：初始仲裁——仅在整个集群首次启动时才需要初始仲裁</li>
+</ul>
+<h2 id="2-1-主节点职责"><a href="#2-1-主节点职责" class="headerlink" title="2.1 主节点职责"></a>2.1 主节点职责</h2><p>主节点负责集群范围内的轻量级操作，例如：</p>
+<ul>
+<li>创建或删除索引</li>
+<li>跟踪哪些节点是集群的一部分</li>
+<li>确定将哪些分片分配给哪些节点。</li>
+</ul>
+<p>拥有稳定的主节点对于集群健康非常重要。</p>
+<p>候选主节点通过主选举过程成为主节点。</p>
+<p>一个集群中：选举后只有一个主节点。</p>
+<h2 id="2-2-脑裂"><a href="#2-2-脑裂" class="headerlink" title="2.2 脑裂"></a>2.2 脑裂</h2><p>以下脑裂是我的通俗解释：</p>
+<p>假设在 2.1 选举主节点过程中，一个集群中出现了 2个或者2个以上的主节点，也就是说一个集群形式上划分为两个或两个以上的孤立集群，这就被称为脑裂。</p>
+<h2 id="2-3-候选主节点两大基本任务"><a href="#2-3-候选主节点两大基本任务" class="headerlink" title="2.3 候选主节点两大基本任务"></a>2.3 候选主节点两大基本任务</h2><p>候选主节点必须合力完成的两个基本任务：</p>
+<ul>
+<li>选举主节点</li>
+<li>更改集群状态</li>
+</ul>
+<p>即时某些节点故障，也要保住以上两活动正常运行。</p>
+<h2 id="2-4-投票配置"><a href="#2-4-投票配置" class="headerlink" title="2.4 投票配置"></a>2.4 投票配置</h2><p>每个 Elasticsearch 集群都有一组投票配置，这是一组候选主节点的集合。</p>
+<p>什么时候使用呢？</p>
+<ul>
+<li>第一：选举主节点；</li>
+<li>第二：提交新的集群状态。</li>
+</ul>
+<p>什么时候做决策？——仅在投票配置中超过一半节点做出响应后才做决策。</p>
+<p>通常：投票配置和集群中所有候选主节点集合相同。但，某些情况下可以不同。</p>
+<p>以下是要强调的也是被问最多的问题之一：</p>
+<ul>
+<li>为确保集群仍然可用，请勿同时停止投票配置中的一半或更多节点。</li>
+<li>只要有一半以上的投票节点可用，集群就可以正常工作。</li>
+</ul>
+<p>例如：</p>
+<ul>
+<li>如果有三个或四个候选主机节点，则集群可以容忍一个候选主节点不可用。</li>
+<li>如果有两个或更少的候选主节点，则它们必须全部保持可用。</li>
+</ul>
+<p>后面的实战验证举例，你会进一步看到结论。</p>
+<h2 id="2-5-集群规划时设置奇数个候选主节点"><a href="#2-5-集群规划时设置奇数个候选主节点" class="headerlink" title="2.5 集群规划时设置奇数个候选主节点"></a>2.5 集群规划时设置奇数个候选主节点</h2><p>集群中通常应有奇数个候选主节点。</p>
+<p>如果有偶数个，Elasticsearch将其中一个排除在投票配置之外，以确保其大小为奇数。</p>
+<p>换种通俗说法：</p>
+<p>4个候选主节点和3个候选主节点本质一样，只容许一个候选主节点失效。</p>
+<h2 id="2-6-discovery-seed-hosts-和-initial-master-nodes-作用"><a href="#2-6-discovery-seed-hosts-和-initial-master-nodes-作用" class="headerlink" title="2.6 discovery.seed_hosts  和 initial_master_nodes 作用"></a>2.6 discovery.seed_hosts  和 initial_master_nodes 作用</h2><table>
+<thead>
+<tr>
+<th align="left">7.x</th>
+<th align="left">7.X 之前</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">discovery.seed_hosts</td>
+<td align="left">discovery.zen.ping.unicast.hosts</td>
+</tr>
+<tr>
+<td align="left">cluster.initial_master_nodes</td>
+<td align="left">minimum_master_nodes  min_master_count</td>
+</tr>
+</tbody></table>
+<ul>
+<li>discovery.seed_hosts 的来龙去脉</li>
+</ul>
+<p>6.X 5.X对应名字：discovery.zen.ping.unicast.hosts。</p>
+<p>看如下截图，对比：除了名称不同，释义部分一模一样。</p>
+<p><img src="https://filescdn.proginn.com/3ef2568d52beb8806cb79699ab6b9f56/970438090127efdd6b9c6fd1981dd46f.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>如果多节点集群，discovery.seed_hosts 应该配置为候选主节点。</p>
+<ul>
+<li>cluster.initial_master_nodes</li>
+</ul>
+<p>这也是7.X的特性，区别于之前设置min_master_count候选主节点的个数。</p>
+<p>白话文：设置候选主机节点的主机名称列表。</p>
+<p>在7.x节点上，discovery.zen.minimum_master_nodes设置是允许的，但被忽略。</p>
+<p>集群首次启动的时候，cluster.initial_master_nodes 必须设置为执行集群引导。</p>
+<p>在集群初始化阶段，cluster.initial_master_nodes 应该包含候选主节点的名称，并在集群中每个候选主节点上进行定义。</p>
+<p>本质区别：</p>
+<ul>
+<li>cluster.initial_master_nodes：仅在集群首次启动会使用。</li>
+<li>discovery.seed_hosts：每次启动都需要。</li>
+</ul>
+<h2 id="2-7-Discovery-过程解读"><a href="#2-7-Discovery-过程解读" class="headerlink" title="2.7 Discovery 过程解读"></a>2.7 Discovery 过程解读</h2><p>Discovery 过程从一个或多个种子主机列表以及集群中已知的任何一个候选主节点地址开始。</p>
+<p>该过程分两个阶段进行：</p>
+<ul>
+<li>首先，探测种子地址。</li>
+</ul>
+<p>每个节点通过连接到每个地址并尝试识别其连接的节点是否是候选主节点来探测种子地址。</p>
+<ul>
+<li>其次，如果成功，它将与远程节点共享其所有已知的候选主机节点列表，并且远程节点将依次与其做对等回应。</li>
+</ul>
+<p>然后，该节点将探测刚刚发现的所有新节点，请求其对等节点，依此类推。</p>
+<p>如果该节点不是候选主节点，则它将继续此 Discovery 过程，直到发现了选举的主节点为止。如果未发现选择的主节点，则该节点将在默认值为 1s 之后重试。</p>
+<p>如果该节点是候选主节点，则它将继续此 Discovery 过程，直到它找到了选举的主节点，或者它找到了足够的候选主节点来完成选举。同样的，如果这两种方法都没有很快的进行，则该节点将在 1s 后重试。</p>
+<p>这里有点绕，需要结合英文文档多读几遍，加深 Discovery 理解。</p>
+<h2 id="2-8-elasticsearch-yml-配置注意"><a href="#2-8-elasticsearch-yml-配置注意" class="headerlink" title="2.8 elasticsearch.yml 配置注意"></a>2.8 elasticsearch.yml 配置注意</h2><p>现在，7.X Elasticsearch 的生产部署需要至少在 elasticsearch.yml 配置文件中指定以下设置之一：</p>
+<ul>
+<li>discovery.seed_hosts</li>
+<li>discovery.seed_providers</li>
+<li>cluster.initial_master_nodes</li>
+<li>discovery.zen.ping.unicast.hosts</li>
+<li>discovery.zen.hosts_provider</li>
+</ul>
+<h2 id="2-9-非候选主节点在-discovery-阶段被忽略"><a href="#2-9-非候选主节点在-discovery-阶段被忽略" class="headerlink" title="2.9  非候选主节点在 discovery  阶段被忽略"></a>2.9  非候选主节点在 discovery  阶段被忽略</h2><p>在 7.X 之前早期版本中，有可能在 discovery 过程中使用非候选主节点作为种子节点或在符合条件的主机之间间接传输信息。</p>
+<p>像这样的依赖非候选主节点的集群非常脆弱，无法自动从某些故障中恢复。</p>
+<p>7.X 版本之后，discovery 仅涉及集群中候选主节点，不会像早期版本一样依赖于非候选主节点。</p>
+<p>如何在7.X 中配置呢？应该在配置中将  discovery.seed_hosts 或者  discovery.seed_providers 设置为所有候选主节点的地址。</p>
+<h2 id="2-10-关于故障检测超时时间"><a href="#2-10-关于故障检测超时时间" class="headerlink" title="2.10 关于故障检测超时时间"></a>2.10 关于故障检测超时时间</h2><p>7.X 默认情况下，如果集群节点未能响应 3 个连续的 ping（每个 ping 在 10 秒后超时），则集群故障检测子系统现在将其视为故障节点。</p>
+<p>因此，响应时间超过 <strong>30</strong> 秒 的节点可能会从集群中删除。</p>
+<p>7.X 以前，每个ping的默认超时为 30 秒，因此，无响应的节点可能会在集群中保留 90 秒以上。</p>
+<h2 id="2-11-删除候选主节点有时需要做排除投票"><a href="#2-11-删除候选主节点有时需要做排除投票" class="headerlink" title="2.11  删除候选主节点有时需要做排除投票"></a>2.11  删除候选主节点有时需要做排除投票</h2><p>如果你希望从集群中删除一半或更多的候选主节点，则必须首先使用投票配置排除API从投票配置中排除受影响的节点。</p>
+<p>排除 API 如下：</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sqf">POST <span class="hljs-variable">_cluster</span>/voting_config_exclusions?node_names=<br>POST <span class="hljs-variable">_cluster</span>/voting_config_exclusions?node_ids=<br>DELETE <span class="hljs-variable">_cluster</span>/voting_config_exclusions<br></code></pre></td></tr></table></figure>
+
+<p>如果你同时删除少于一半的候选主节点，则不需要做投票排除。</p>
+<p>如果仅删除非候选主节点（例如仅数据节点或仅协调节点），则不需要做投票排除。</p>
+<p>同样，如果将节点添加到集群，也不需要投票排除。</p>
+<h1 id="3、实践一把"><a href="#3、实践一把" class="headerlink" title="3、实践一把"></a>3、实践一把</h1><h2 id="3-1-场景1：一主节点、一仅数据节点"><a href="#3-1-场景1：一主节点、一仅数据节点" class="headerlink" title="3.1 场景1：一主节点、一仅数据节点"></a>3.1 场景1：一主节点、一仅数据节点</h2><p>数据节点配置：</p>
+<p><img src="https://filescdn.proginn.com/98d473e23af0c8eecf926d486644d175/21f651ce6364ad3773949eb6d7dd8107.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>seed host 和  initial_master_nodes 只设置主节点配置。</li>
+</ul>
+<p>结果如下：</p>
+<p><img src="https://filescdn.proginn.com/bc3676c2d6ba44b2323f73915168cc11/92d60cd10bf6d1efb4f924eb72eb7427.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="3-2-场景二：一主节点、二仅数据节点"><a href="#3-2-场景二：一主节点、二仅数据节点" class="headerlink" title="3.2 场景二：一主节点、二仅数据节点"></a>3.2 场景二：一主节点、二仅数据节点</h2><p>两个数据节点配置：</p>
+<p><img src="https://filescdn.proginn.com/f1ba9dc5218c5309dbf0a8f2efa7bdd2/983c0c32b5d33d077adcc565188883c1.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li><p>seed host 和  initial_master_nodes 只设置主节点配置。</p>
+<p><img src="https://filescdn.proginn.com/24285b88ba0fe470db7d93dc8d2cdc2b/01a1b6825e167514447da5aa435d0199.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+</li>
+</ul>
+<h2 id="3-3-场景三：三个节点都是主节点同时也是数据节点"><a href="#3-3-场景三：三个节点都是主节点同时也是数据节点" class="headerlink" title="3.3 场景三：三个节点都是主节点同时也是数据节点"></a>3.3 场景三：三个节点都是主节点同时也是数据节点</h2><p>三节点相同配置如下：</p>
+<p><img src="https://filescdn.proginn.com/c8566970d9dbab9113e5850168a75fd9/9f3c2780901c88a25284391d05a579d7.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://filescdn.proginn.com/96a5b86df0e5ee9aa1276818e4bc0bb9/3f6e0d65d6796173364e0a342f83e9b7.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>注意，这时候，我把node-1 强制杀掉？大家猜会发生什么？</p>
+<p>如果说宕机，你错了！集群进行了重新选主：</p>
+<p><img src="https://filescdn.proginn.com/0b2582e34b0721cbfed974ff752748cd/75f00682eefe43c6799660994e11d307.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>结果如下：节点2 成为主节点。</p>
+<p><img src="https://filescdn.proginn.com/388ded03a40b9f2e1572f751a00e13ec/5c3afa0edc6bf71f76b496c73b2b959d.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>实际业务场景不建议这么做，数据节点在没有设置主节点角色：node.master: true 的前提下，成为了主节点。</p>
+<h2 id="3-4-场景四：三个节点都是主节点同时也是数据节点"><a href="#3-4-场景四：三个节点都是主节点同时也是数据节点" class="headerlink" title="3.4 场景四：三个节点都是主节点同时也是数据节点"></a>3.4 场景四：三个节点都是主节点同时也是数据节点</h2><p>三节点相同配置如下：</p>
+<p><img src="https://filescdn.proginn.com/a69755c631a25e797494e1e4a36f10fe/0cc299a5c7c58ad26647939e46dd6cf9.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://filescdn.proginn.com/acbd805081829f905c7bc18b58d82138/e85b38da658779445b10f820aaa13be5.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>逐个kill 掉 节点2、节点 1 看看结果？</p>
+<p>先干掉节点2：节点1成为了主节点。</p>
+<p><img src="https://filescdn.proginn.com/9d06eb067a8713d21b3cc30aa3f95d6a/afaca4bb25584f9edeea1850dd914e69.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>再干掉节点1：集群已无法访问和使用。</p>
+<p><img src="https://filescdn.proginn.com/9c2e1bcc4fe6349c3d3caf0cb10718db/47c73afbdeed04080e1d3597e4596f9e.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这个时候，错误日志如下：</p>
+<p>核心错误说明：候选主节点要求至少 2个节点。</p>
+<p>an election requires at least 2 nodes  …..  which is not a quorum.</p>
+<p>详细报错如下：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">[<span class="hljs-keyword">node</span><span class="hljs-title">-3</span>] <span class="hljs-keyword">master</span> <span class="hljs-title">not</span> discovered <span class="hljs-keyword">or</span> elected yet, an election requires at least <span class="hljs-number">2</span> nodes with ids from [<span class="hljs-number">0</span>bozQB4VRZWB4TuzjRahAw, Z7PxWN_bQEeeI6KOlQT8pw, AWDZHrxaTd2qmOB1e8kadQ], have discovered [] which is not a quorum; discovery will continue using [<span class="hljs-number">172.21</span>.<span class="hljs-number">0.14</span>:<span class="hljs-number">9300</span>, <span class="hljs-number">172.21</span>.<span class="hljs-number">0.14</span>:<span class="hljs-number">9302</span>] from hosts providers <span class="hljs-keyword">and</span> [&#123;<span class="hljs-keyword">node</span><span class="hljs-title">-3</span>&#125;&#123;Z7PxWN_bQEeeI6KOlQT8pw&#125;&#123;ejRvW9egTrum3G5DrwmrIA&#125;&#123;<span class="hljs-number">172.21</span>.<span class="hljs-number">0.14</span>&#125;&#123;<span class="hljs-number">172.21</span>.<span class="hljs-number">0.14</span>:<span class="hljs-number">9303</span>&#125;&#123;ml.<span class="hljs-attr">machine_memory=</span><span class="hljs-number">8200851456</span>, xpack.<span class="hljs-attr">installed=</span><span class="hljs-literal">true</span>, ml.<span class="hljs-attr">max_open_jobs=</span><span class="hljs-number">20</span>&#125;, &#123;<span class="hljs-keyword">node</span><span class="hljs-title">-1</span>&#125;&#123;AWDZHrxaTd2qmOB1e8kadQ&#125;&#123;FFIDQcynQMGHqPwCW9lFfw&#125;&#123;<span class="hljs-number">172.21</span>.<span class="hljs-number">0.14</span>&#125;&#123;<span class="hljs-number">172.21</span>.<span class="hljs-number">0.14</span>:<span class="hljs-number">9300</span>&#125;&#123;ml.<span class="hljs-attr">machine_memory=</span><span class="hljs-number">8200851456</span>, ml.<span class="hljs-attr">max_open_jobs=</span><span class="hljs-number">20</span>, xpack.<span class="hljs-attr">installed=</span><span class="hljs-literal">true</span>&#125;] from last-known cluster state; <span class="hljs-keyword">node</span> <span class="hljs-title">term</span> <span class="hljs-number">8</span>, last-accepted <span class="hljs-keyword">version</span> <span class="hljs-number">92</span> <span class="hljs-keyword">in</span> term <span class="hljs-number">8</span><br></code></pre></td></tr></table></figure>
+
+<p>正如官方文档所示：</p>
+<p>为确保集群仍然可用，你不得同时停止投票配置中的一半或更多节点。只要有一半以上的投票节点可用，集群可以正常工作。</p>
+<p>如前所述：投票配置中配置的就是候选主节点！</p>
+<h2 id="3-5-场景五：三个节点都是主节点同时也是数据节点"><a href="#3-5-场景五：三个节点都是主节点同时也是数据节点" class="headerlink" title="3.5 场景五：三个节点都是主节点同时也是数据节点"></a>3.5 场景五：三个节点都是主节点同时也是数据节点</h2><p>在老配置基础上修改，注释掉：initial_master_nodes 的配置。配置如下：</p>
+<p><img src="https://filescdn.proginn.com/a67a6422a362e3990836381bc940c30a/f429232d3f746f996b2dd344d0bfeecb.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>集群结果如下：</p>
+<p><img src="https://filescdn.proginn.com/26ad83e77212a01b34759340178089c0/82bb9bcf631c51968b40d9a5c5cdc244.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>集群也能正常启动。结合 2.6 小节看能更好理解一些。</p>
+<h1 id="4、再回答腾讯大佬的问题"><a href="#4、再回答腾讯大佬的问题" class="headerlink" title="4、再回答腾讯大佬的问题"></a>4、再回答腾讯大佬的问题</h1><ul>
+<li>1、 seed_hosts里面一定是配置 master eligible节点吗?</li>
+</ul>
+<p>是的，必须候选主节点。</p>
+<ul>
+<li>2、还是说data节点也可以配置到 master eligible</li>
+</ul>
+<p>理论可以，实际不推荐。</p>
+<ul>
+<li>3、是如何发现潜在机器的呢?</li>
+</ul>
+<p>Discovery 过程就是发现过程。</p>
+<ul>
+<li>4、initial_master一定是master eligible节点吧?</li>
+</ul>
+<p>是的。</p>
+<ul>
+<li>5、集群初始启动时, 这几个节点一定都要在是吗?</li>
+</ul>
+<p>大规模集群要注意：集群规划阶段要考虑设置：奇数个候选主节点。</p>
+<p>集群初始启动阶段之前候选主节点配置要设置合理。</p>
+<ul>
+<li>6 、初始的时候是不是可以配置一个, 然后集群初始化后, 再加master eligible节点也可以的是吗?</li>
+</ul>
+<p>可以，但不推荐。</p>
+<p>如果多节点集群，建议一步到位。</p>
+<ul>
+<li>7 、多加几个以后, 把initial_master里的几个去掉是不是也可以了?</li>
+</ul>
+<p>仅在集群首次启动会使用，其他阶段可以去掉。详见案例五。</p>
+<p>不过，规范管理起见，配置上不用动就可以了。</p>
+<ul>
+<li>8、如果一个集群当前master为7，那他的quorum是4。es 是支持慢慢去掉节点，quorum慢慢降低的吗？</li>
+</ul>
+<p>换个思维理解，这里如果有 7 个候选主节点，意味着至少要一半以上有效集群才能存活。</p>
+<p>也就是干掉3个候选主节点，集群依然是存活状态的。</p>
+<ul>
+<li>9、 那假如慢慢去掉了3个节点，原集群正常工作，那这三个节点重启后网络分区在一起了，那会不会自己形成集群啊？</li>
+</ul>
+<p>不会，去掉的3个节点，还会继续加入原来的集群啊！</p>
+<h1 id="5、小结"><a href="#5、小结" class="headerlink" title="5、小结"></a>5、小结</h1><p>类似概念的确单纯看文档不好理解，甚至你看完本文还是有点糊涂。</p>
+<p>不要为了区分概念而区分概念，实践一把，把理论概念转成实践、再结合理论，就好理解了。</p>
+<p>欢迎留言写下你的思考！</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/breaking-changes-7.0.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.0/breaking-changes-7.0.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-voting.html8">https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-voting.html8</a></p>
+<p><a target="_blank" rel="noopener" href="https://jishuin.proginn.com/p/763bfbd3475a">https://jishuin.proginn.com/p/763bfbd3475a</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Elasticsearch/">Elasticsearch</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/25/Elasticsearch%E6%9F%A5%E8%AF%A2%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93%E4%BB%A5%E5%8F%8Atimestamp%E5%92%8C%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/">
+                        <span class="hidden-mobile">Elasticsearch查询相关总结以及timestamp和时区问题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "4l4KDMQ2rUvohNwf2pd0A3MP-gzGzoHsz",
+          app_key: "Kd9Pm7FejmvkWARe5jtfgoVp",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
