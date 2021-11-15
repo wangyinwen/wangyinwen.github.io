@@ -182,13 +182,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/11/11/Elasticsearch%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%97%B6%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" target="_self">
-          Elasticsearch集群部署时配置文件详解
+        <a href="/2021/11/11/Elasticsearch%E7%B3%BB%E5%88%97(%E4%BA%8C)%E3%80%81%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%97%B6%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" target="_self">
+          Elasticsearch系列(二)、集群部署时配置文件详解
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/11/11/Elasticsearch%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%97%B6%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" target="_self">
+        <a href="/2021/11/11/Elasticsearch%E7%B3%BB%E5%88%97(%E4%BA%8C)%E3%80%81%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%97%B6%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" target="_self">
           
           
             
@@ -225,13 +225,60 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/08/25/Elasticsearch%E6%9F%A5%E8%AF%A2%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93%E4%BB%A5%E5%8F%8Atimestamp%E5%92%8C%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/" target="_self">
-          Elasticsearch查询相关总结以及timestamp和时区问题
+        <a href="/2021/10/20/Elasticsearch%E7%B3%BB%E5%88%97(%E4%BA%94)%E3%80%81%E4%BD%BF%E7%94%A8xpack%E8%BF%9B%E8%A1%8C%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%92%8C%E5%A4%9A%E7%A7%9F%E6%88%B7%E7%AE%A1%E7%90%86/" target="_self">
+          Elasticsearch系列(五)、使用xpack进行安全认证和多租户管理
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/08/25/Elasticsearch%E6%9F%A5%E8%AF%A2%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93%E4%BB%A5%E5%8F%8Atimestamp%E5%92%8C%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/" target="_self">
+        <a href="/2021/10/20/Elasticsearch%E7%B3%BB%E5%88%97(%E4%BA%94)%E3%80%81%E4%BD%BF%E7%94%A8xpack%E8%BF%9B%E8%A1%8C%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81%E5%92%8C%E5%A4%9A%E7%A7%9F%E6%88%B7%E7%AE%A1%E7%90%86/" target="_self">
+          
+          
+            
+          
+          ELK的多租户管理
+要实现这个多租户管理，需要给elasticsearch启用xpack插件，这个插件在7.1以后的版本会随es直接安装且完全免费
+单机部署比较简单，网上有很多帖子其实都是基于单机部署的，这里主要讲集群部署的步骤
+
+1.修改ES配置文件并重启12345678910111213141516cluster.name: db-searchnode.name: dc-search-es7-
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-10-20 16:16" pubdate>
+              2021-10-20
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Elasticsearch/">Elasticsearch</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/25/Elasticsearch%E7%B3%BB%E5%88%97(%E5%9B%9B)%E3%80%81%E6%9F%A5%E8%AF%A2%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93%E4%BB%A5%E5%8F%8Atimestamp%E5%92%8C%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/" target="_self">
+          Elasticsearch系列(四)、查询相关总结以及timestamp和时区问题
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/25/Elasticsearch%E7%B3%BB%E5%88%97(%E5%9B%9B)%E3%80%81%E6%9F%A5%E8%AF%A2%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93%E4%BB%A5%E5%8F%8Atimestamp%E5%92%8C%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/" target="_self">
           
           
             
@@ -318,13 +365,13 @@ Django中connections.close_all()的
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/08/20/Elasticsearch%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E7%9A%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" target="_self">
-          Elasticsearch集群部署的相关问题记录
+        <a href="/2021/08/20/Elasticsearch%E7%B3%BB%E5%88%97(%E4%B8%89)%E3%80%81%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E7%9A%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" target="_self">
+          Elasticsearch系列(三)、集群部署的相关问题记录
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/08/20/Elasticsearch%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E7%9A%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" target="_self">
+        <a href="/2021/08/20/Elasticsearch%E7%B3%BB%E5%88%97(%E4%B8%89)%E3%80%81%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E7%9A%84%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" target="_self">
           
           
             
@@ -336,8 +383,10 @@ Kibana：5601
 Logstash：5044
 cerebro: 9000
 
-ES启动时遇到的问题问题：
-1234ERROR: [2] bootstrap checks failed.You must add
+ES启动时遇到的问题问题1：
+java.nio.file.AccessDeniedException
+
+一般是文件权限的问题，一定
         </a>
       </p>
 
@@ -369,13 +418,13 @@ ES启动时遇到的问题问题：
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2021/08/05/%E4%BD%BF%E7%94%A8Elasticsearch+filebeat+logstach+kibana%E6%9E%84%E5%BB%BA%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/" target="_self">
-          使用Elasticsearch+filebeat+logstach+kibana构建日志服务平台
+        <a href="/2021/08/05/Elasticsearch%E7%B3%BB%E5%88%97(%E4%B8%80)%E3%80%81Elasticsearch+filebeat+logstach+kibana%E6%9E%84%E5%BB%BA%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/" target="_self">
+          Elasticsearch系列(一)、Elasticsearch+filebeat+logstach+kibana构建日志服务平台
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2021/08/05/%E4%BD%BF%E7%94%A8Elasticsearch+filebeat+logstach+kibana%E6%9E%84%E5%BB%BA%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/" target="_self">
+        <a href="/2021/08/05/Elasticsearch%E7%B3%BB%E5%88%97(%E4%B8%80)%E3%80%81Elasticsearch+filebeat+logstach+kibana%E6%9E%84%E5%BB%BA%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/" target="_self">
           
           
             
@@ -593,54 +642,11 @@ devops中日志服务的搭建
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/03/10/DockerFile%E5%92%8CDockerCompose%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/" target="_self">
-          DockerFile和DockerCompose使用总结
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/03/10/DockerFile%E5%92%8CDockerCompose%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/" target="_self">
-          
-          
-            
-          
-          DockerFile基本结构12345678910111213# 1、第一行必须是 FROM 基础镜像信息FROM ubuntu # 2、维护者信息MAINTAINER docker_user docker_user@email.com # 3、镜像操作指令RUN echo &quot;deb http://archive.ubuntu.com/ubuntu/ raring main univer
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-03-10 18:30" pubdate>
-              2021-03-10
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Docker/">Docker</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 

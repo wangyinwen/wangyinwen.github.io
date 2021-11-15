@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>Elasticsearch查询相关总结以及timestamp和时区问题 - Hexo</title>
+  <title>Elasticsearch系列(五)、使用xpack进行安全认证和多租户管理 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Elasticsearch查询相关总结以及timestamp和时区问题">
+            <span class="h2" id="subtitle" title="Elasticsearch系列(五)、使用xpack进行安全认证和多租户管理">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-08-25 16:16" pubdate>
-        2021年8月25日 下午
+      <time datetime="2021-10-20 16:16" pubdate>
+        2021年10月20日 下午
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      333 字
+      792 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      4
+      10
        分钟
     </span>
   
@@ -225,36 +225,40 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Elasticsearch查询相关总结以及timestamp和时区问题</h1>
+            <h1 style="display: none">Elasticsearch系列(五)、使用xpack进行安全认证和多租户管理</h1>
             
             <div class="markdown-body">
-              <h2 id="ES查询相关"><a href="#ES查询相关" class="headerlink" title="ES查询相关"></a>ES查询相关</h2><p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/qdhxhz/p/11493677.html">https://www.cnblogs.com/qdhxhz/p/11493677.html</a></p>
-<ul>
-<li><p>如果想筛选出特定时间段的event，可以在查询语句里使用<code>post_filter</code></p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs awk">POST <span class="hljs-regexp">/wangtest_re/</span>_search<br>&#123;<br>  <span class="hljs-string">&quot;post_filter&quot;</span>:&#123;<br>    <span class="hljs-string">&quot;range&quot;</span>: &#123;<br>      <span class="hljs-string">&quot;@timestamp&quot;</span>: &#123;<br>        <span class="hljs-string">&quot;gte&quot;</span>: <span class="hljs-string">&quot;2012-08-01T15:00:00.000+800&quot;</span>,<br>        <span class="hljs-string">&quot;lte&quot;</span>: <span class="hljs-string">&quot;2012-08-01T15:00:00.000+800&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>  ...<br><br>&#125;<br></code></pre></td></tr></table></figure></li>
-<li><p>也可以把range写在query语句里，但是用户使用where语句的时候，也是放置在query里的，所以无法预知客户的输入，所以range语句放不进去</p>
-</li>
-<li><p>post_filter，是查询后再过滤的，因为不需要计算score，所以速度更快，而且数据会缓存</p>
-</li>
+              <h2 id="ELK的多租户管理"><a href="#ELK的多租户管理" class="headerlink" title="ELK的多租户管理"></a>ELK的多租户管理</h2><ul>
+<li>要实现这个多租户管理，需要给elasticsearch启用xpack插件，这个插件在7.1以后的版本会随es直接安装且完全免费</li>
+<li>单机部署比较简单，网上有很多帖子其实都是基于单机部署的，这里主要讲集群部署的步骤</li>
 </ul>
-<h2 id="时区问题"><a href="#时区问题" class="headerlink" title="时区问题"></a>时区问题</h2><p>参考：<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000022064788">https://segmentfault.com/a/1190000022064788</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lijingjingchn/article/details/100576088">https://blog.csdn.net/lijingjingchn/article/details/100576088</a></p>
+<h3 id="1-修改ES配置文件并重启"><a href="#1-修改ES配置文件并重启" class="headerlink" title="1.修改ES配置文件并重启"></a>1.修改ES配置文件并重启</h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">cluster</span>.name: db-<span class="hljs-keyword">search</span><br>node.name: dc-<span class="hljs-keyword">search</span>-es7<span class="hljs-number">-1</span><br><span class="hljs-type">path</span>.data: /data01/elasticsearch/data<br><span class="hljs-type">path</span>.logs: /data01/elasticsearch/<span class="hljs-keyword">log</span><br>network.host: <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br>http.port: <span class="hljs-number">9200</span><br>transport.tcp.port: <span class="hljs-number">9300</span><br><br>discovery.seed_hosts: [&quot;10.3.23.249:9300&quot;,&quot;10.3.23.48:9300&quot;,&quot;10.3.23.191:9300&quot;]<br><span class="hljs-keyword">cluster</span>.initial_master_nodes: [&quot;10.3.23.249:9300&quot;,&quot;10.3.23.48:9300&quot;,&quot;10.3.23.191:9300&quot;]<br># 以下内容如果不需要用x-pack可以不用配置<br>xpack.<span class="hljs-keyword">security</span>.enabled: <span class="hljs-keyword">true</span><br>xpack.<span class="hljs-keyword">security</span>.transport.ssl.enabled: <span class="hljs-keyword">true</span><br>xpack.<span class="hljs-keyword">security</span>.transport.ssl.verification_mode: certificate<br>xpack.<span class="hljs-keyword">security</span>.transport.ssl.keystore.path: elastic-certificates.p12<br>xpack.<span class="hljs-keyword">security</span>.transport.ssl.truststore.path: elastic-certificates.p12<br></code></pre></td></tr></table></figure>
+
 <ul>
-<li><p>时间戳：unix时间戳是从1970年1月1日（UTC/GMT的午夜）开始所经过的秒数，不考虑闰秒</p>
-</li>
-<li><p>因为给用户看UTC时间不合适，所以最好的做法是，让es输出时间戳，后台根据时间戳再转换成2021-12-12 12:12:12的格式</p>
-</li>
+<li><code>xpack.security.enabled</code>：表示开启xpack认证机制。</li>
+<li><code>xpack.security.transport.ssl.enabled</code>：这条如果不配，es将起不来，会报如下错误:<code>Transport SSL must be enabled if security is enabled on a [basic] license. Please set [xpack.security.transport.ssl.enabled] to [true] or disable security by setting [xpack.security.enabled] to [false]</code></li>
+<li>下面两条是证书文件存放路径，上面那样写代表是在config目录下</li>
+<li>网上看到有些说添加配置<code>xpack.security.authc.accept_default_password: true</code>会自动生成默认密码：changeme。但是我试了一下没有成功</li>
 </ul>
-<p>时间戳和时间转换代码：</p>
-<p><a target="_blank" rel="noopener" href="https://felix.blog.csdn.net/article/details/51355282">https://felix.blog.csdn.net/article/details/51355282</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#coding:UTF-8</span><br><span class="hljs-keyword">import</span> time<br><br>timestamp = <span class="hljs-number">1462451334</span> <span class="hljs-comment"># 如果需要格式转换，这里用float格式</span><br><br><span class="hljs-comment">#转换成localtime</span><br>time_local = time.localtime(timestamp)<br><span class="hljs-comment">#转换成新的时间格式(2016-05-05 20:28:54)</span><br>dt = time.strftime(<span class="hljs-string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>,time_local)<br><br><span class="hljs-built_in">print</span>(dt)<br><br><br></code></pre></td></tr></table></figure>
+<h3 id="2-生成CA证书"><a href="#2-生成CA证书" class="headerlink" title="2.生成CA证书"></a>2.生成CA证书</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs gradle">#进到es的安装目录，如果是yum安装或者rpm安装的默认是<span class="hljs-regexp">/usr/</span>share/elasticsearch下<br>[root@localhost ~]# cd <span class="hljs-regexp">/usr/</span>share<span class="hljs-regexp">/elasticsearch/</span><br> <br>#生成CA证书，遇到账号密码回车即可<br>[root@localhost elasticsearch]# bin/elasticsearch-certutil ca<br> <br>#生成节点证书，遇到账号密码回车即可<br>[root@localhost elasticsearch]# bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12<br> <br>#生成证书到配置文件目录<span class="hljs-regexp">/etc/</span>elasticsearch下<br>[root@localhost elasticsearch]# bin<span class="hljs-regexp">/elasticsearch-certutil cert -out /</span>etc<span class="hljs-regexp">/elasticsearch/</span>elastic-certificates.p12 -pass<br>#上面命令执行成功后，会在`<span class="hljs-regexp">/etc/</span>elasticsearch/`文件夹下生成elastic-certificates.p12证书<br></code></pre></td></tr></table></figure>
 
+<p>把<code>/etc/elasticsearch/</code>文件夹下生成elastic-certificates.p12证书拷贝到elasticsearch/config文件夹下，并chown修改权限</p>
+<h3 id="3-CA证书拷贝"><a href="#3-CA证书拷贝" class="headerlink" title="3.CA证书拷贝"></a>3.CA证书拷贝</h3><p>上述第二步在一个节点直接就行，然后把生成的那个文件拷贝到其他节点的相同位置，注意调整权限，否则会报错</p>
+<h3 id="4-密码设置"><a href="#4-密码设置" class="headerlink" title="4.密码设置"></a>4.密码设置</h3><p>这个密码设置只需要在一个节点配置就行</p>
+<p>执行：<code>/usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive</code></p>
+<h3 id="5-配置kibana，并重启"><a href="#5-配置kibana，并重启" class="headerlink" title="5.配置kibana，并重启"></a>5.配置kibana，并重启</h3><p>在kibana配置文件中添加下面两行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sh">elasticsearch.username: <span class="hljs-string">&quot;kibana&quot;</span><br>elasticsearch.password: <span class="hljs-string">&quot;kibana_passwd&quot;</span><br></code></pre></td></tr></table></figure>
 
-
-
-
-
-
+<p>参考：<a target="_blank" rel="noopener" href="https://wiki.eryajf.net/pages/3500.html#_3-%E9%85%8D%E7%BD%AEkibana%E8%BF%9E%E6%8E%A5%E3%80%82">https://wiki.eryajf.net/pages/3500.html#_3-%E9%85%8D%E7%BD%AEkibana%E8%BF%9E%E6%8E%A5%E3%80%82</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.lixian.fun/4928.html">https://www.lixian.fun/4928.html</a></p>
+<h2 id="kibana层面的工作空间（space），用户（user）、角色（role）等配置"><a href="#kibana层面的工作空间（space），用户（user）、角色（role）等配置" class="headerlink" title="kibana层面的工作空间（space），用户（user）、角色（role）等配置"></a>kibana层面的工作空间（space），用户（user）、角色（role）等配置</h2><ul>
+<li>工作空间的作用应该是保证不同用户在不同空间里工作（好像是废话）</li>
+<li>角色可能包含多个工作空间，用户可能包含多个角色</li>
+<li>角色里可以配置不同角色对不同索引的操作权限</li>
+<li>elastic用户是super用户，用这个账号登录再进行其他账号权限的配置</li>
+</ul>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/sanduzxcvbnm/p/12074772.html">https://www.cnblogs.com/sanduzxcvbnm/p/12074772.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sanduzxcvbnm/p/11427692.html">https://www.cnblogs.com/sanduzxcvbnm/p/11427692.html</a></p>
 
             </div>
             <hr>
@@ -282,9 +286,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/11/11/Elasticsearch%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%97%B6%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/">
+                      <a href="/2021/11/11/Elasticsearch%E7%B3%BB%E5%88%97(%E4%BA%8C)%E3%80%81%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%97%B6%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Elasticsearch集群部署时配置文件详解</span>
+                        <span class="hidden-mobile">Elasticsearch系列(二)、集群部署时配置文件详解</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -292,8 +296,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/08/20/Python3%E9%AB%98%E5%B9%B6%E5%8F%91%E5%AE%9A%E6%97%B6%E6%9B%B4%E6%96%B0%E4%BB%BB%E5%8A%A1%E8%BF%9B%E7%A8%8B%E6%B1%A0%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E4%BD%BF%E7%94%A8/">
-                        <span class="hidden-mobile">Python3高并发定时更新任务进程池和线程池的使用</span>
+                      <a href="/2021/08/25/Elasticsearch%E7%B3%BB%E5%88%97(%E5%9B%9B)%E3%80%81%E6%9F%A5%E8%AF%A2%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93%E4%BB%A5%E5%8F%8Atimestamp%E5%92%8C%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/">
+                        <span class="hidden-mobile">Elasticsearch系列(四)、查询相关总结以及timestamp和时区问题</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
