@@ -227,6 +227,53 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2022/01/05/jenkins%E5%AE%89%E8%A3%85%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/" target="_self">
+          jenkins安装中遇到的坑
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/01/05/jenkins%E5%AE%89%E8%A3%85%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/" target="_self">
+          
+          
+            
+          
+          首先有两种安装方式：大多数是下载rpm包，rpm -ivh …..rpm
+但是我安装的时候提示daemonize这个包没有，其实在这一步使用yum install daemonize，再执行安装就行了
+但是现在官网jenkins推荐使用yum安装，先下载他们的库文件，但是我用这种方式报错了，因为我下载到了rpm包，所以也没有顺着这条路深究
+其实大坑是yum的代理和源的配置，有时间了补充一下
+
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-01-05 22:22" pubdate>
+              2022-01-05
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Devops%EF%BC%8CAnsible/">Devops，Ansible</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/12/08/Elasticsearch%E7%B3%BB%E5%88%97(%E4%B8%83)%E3%80%81ES%E9%9B%86%E7%BE%A4%E7%9A%84%E6%B0%B4%E5%B9%B3%E6%89%A9%E5%B1%95%E8%AE%B0%E5%BD%95/" target="_self">
           Elasticsearch系列(七)、ES集群的水平扩展记录
         </a>
@@ -596,50 +643,6 @@ Django中connections.close_all()的
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Docker/">Docker</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/07/01/Python%E5%A4%9A%E8%BF%9B%E7%A8%8B%E9%97%AE%E9%A2%98%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B/" target="_self">
-          Python多进程问题，以及如何避免僵尸进程
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/07/01/Python%E5%A4%9A%E8%BF%9B%E7%A8%8B%E9%97%AE%E9%A2%98%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B/" target="_self">
-          
-          
-            
-          
-          接上一篇Ansible和celery的结合，在celery的tasks.py文件里为了实现并发不阻塞的需求，用到了多进程举例如下：tasks.py文件如下：
-12345678910111213141516171819202122import signalfrom multiprocessing import Processfrom django.db import connectionsdef c
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-07-01 16:56" pubdate>
-              2021-07-01
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/linux%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B/">linux、多进程</a>
             
           </div>
         
