@@ -182,6 +182,99 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/06/06/%E5%9C%A8python%E4%B8%AD%E4%BD%BF%E7%94%A8Ansible%E5%AE%9E%E7%8E%B0Devops%E7%9A%84%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93/" target="_self">
+          在python中使用Ansible实现Devops的相关总结
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/06/06/%E5%9C%A8python%E4%B8%AD%E4%BD%BF%E7%94%A8Ansible%E5%AE%9E%E7%8E%B0Devops%E7%9A%84%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93/" target="_self">
+          
+          
+            
+          
+          在python中使用Ansible实现Devops的相关总结前言​    Ansible虽然底层是用python写的，但是对python的API支持并不友好，官方文档里只用了一个example来说明，想知道各个组件的参数功能可能只能去看源码了，现在记录一下自己的总结
+环境——ansible==2.8.1问题总结
+如果需要有额外的参数，或者在playbook中需要传入参数怎么办？
+在context.
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-06 22:22" pubdate>
+              2021-06-06
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Devops%EF%BC%8CAnsible/">Devops，Ansible</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/06/06/jenkins%E5%AE%89%E8%A3%85%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/" target="_self">
+          jenkins安装中遇到的坑
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/06/06/jenkins%E5%AE%89%E8%A3%85%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/" target="_self">
+          
+          
+            
+          
+          首先有两种安装方式：大多数是下载rpm包，rpm -ivh …..rpm
+但是我安装的时候提示daemonize这个包没有，其实在这一步使用yum install daemonize，再执行安装就行了
+但是现在官网jenkins推荐使用yum安装，先下载他们的库文件，但是我用这种方式报错了，因为我下载到了rpm包，所以也没有顺着这条路深究
+其实大坑是yum的代理和源的配置，有时间了补充一下
+
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-06-06 22:22" pubdate>
+              2021-06-06
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Devops%EF%BC%8CAnsible/">Devops，Ansible</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/05/10/kubernetes%EF%BC%88k8s%EF%BC%89%E4%B9%8Byaml%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" target="_self">
           kubernetes（k8s）之yaml文件详解
         </a>
@@ -528,100 +621,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">计算机视觉</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2019/07/16/Django%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%9F%A5%E8%AF%A2%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8Amysql%20gone%20away%E9%97%AE%E9%A2%98/" target="_self">
-          Django多进程中的查询错乱问题以及mysql gone away问题
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2019/07/16/Django%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%9F%A5%E8%AF%A2%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8Amysql%20gone%20away%E9%97%AE%E9%A2%98/" target="_self">
-          
-          
-            
-          
-          
-Django多进程中的查询错乱问题因为业务需要，写了一个多进程程序，但是发现查询结果错乱，比如在同一个进程里输出Asset.object.get(ip=1.1.1.1).ip发现输出的并不是1.1.1.1
-初步感觉是django底层用的musql_db这个库是进程不安全的，也就是不支持多进程操作，所以这种情况最好用多线程
-
-关于mysql gone away的问题
-一开始我以为是connecti
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-07-16 15:23" pubdate>
-              2019-07-16
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Django/">Django</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2019/06/10/C%20C++%E4%B8%AD%E5%85%B3%E4%BA%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%EF%BC%8Cextern%EF%BC%8Cstatic%EF%BC%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E6%80%BB%E7%BB%93/" target="_self">
-          C C++中关于全局变量静态变量，extern，static，const的区别与总结
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2019/06/10/C%20C++%E4%B8%AD%E5%85%B3%E4%BA%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%EF%BC%8Cextern%EF%BC%8Cstatic%EF%BC%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E6%80%BB%E7%BB%93/" target="_self">
-          
-          
-            
-          
-          一.extern
-
-1 基本解释extern可以置于变量或者函数前，以标示变量或者函数的定义在别的文件中，提示编译器遇到此变量和函数时在其他模块中寻找其定义。此外extern也可用来进行链接指定。
-也就是说extern有两个作用，第一个,当它与”C”一起连用时，如: extern “C” void fun(int a, int b);则告诉编译器在编译fun这个函数名时按着C的规则去翻译相应的函数
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-06-10 20:47" pubdate>
-              2019-06-10
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/C/">C++</a>
             
           </div>
         

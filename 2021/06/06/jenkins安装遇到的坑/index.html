@@ -18,9 +18,25 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>归档 - Hexo</title>
+  <title>jenkins安装中遇到的坑 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.6.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -48,7 +64,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -142,14 +158,51 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/plane.png') no-repeat center center;
+         style="background: url('/img/city.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="jenkins安装中遇到的坑">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-06-06 22:22" pubdate>
+        2021年6月6日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      131 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      1
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -162,70 +215,123 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 25 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2019</p>
-    
-    <a href="/2019/07/16/DenseNet%E8%AF%A6%E8%A7%A3/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">DenseNet详解</span>
-      <time style="float: right;">07-16</time>
-    </a>
-  
-    
-    <a href="/2019/07/16/Django%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%9F%A5%E8%AF%A2%E9%94%99%E4%B9%B1%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8Amysql%20gone%20away%E9%97%AE%E9%A2%98/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Django多进程中的查询错乱问题以及mysql gone away问题</span>
-      <time style="float: right;">07-16</time>
-    </a>
-  
-    
-    <a href="/2019/06/10/C%20C++%E4%B8%AD%E5%85%B3%E4%BA%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%EF%BC%8Cextern%EF%BC%8Cstatic%EF%BC%8Cconst%E7%9A%84%E5%8C%BA%E5%88%AB%E4%B8%8E%E6%80%BB%E7%BB%93/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">C C++中关于全局变量静态变量，extern，static，const的区别与总结</span>
-      <time style="float: right;">06-10</time>
-    </a>
-  
-    
-    <a href="/2019/05/30/%E9%A2%91%E7%8E%87%E3%80%81%E6%B3%A2%E9%95%BF%E3%80%81%E4%BC%A0%E8%BE%93%E8%B7%9D%E7%A6%BB%E3%80%81%E4%BC%A0%E8%BE%93%E9%80%9F%E7%8E%87%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%8C%E9%95%BF%E6%B3%A2%EF%BC%88LF%EF%BC%89%EF%BC%8C%E4%B8%AD%E6%B3%A2(MF)%EF%BC%8C%E7%9F%AD%E6%B3%A2(HF)%EF%BC%8C%E5%8E%98%E7%B1%B3%E6%B3%A2(SHF)%EF%BC%8C%E6%AF%AB%E7%B1%B3%E6%B3%A2(EHF)%E9%A2%91%E7%8E%87%E8%8C%83%E5%9B%B4%E6%B3%A2%E9%95%BF%E7%9A%84%E6%80%BB%E7%BB%93/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">频率、波长、传输距离、传输速率之间的关系，长波（LF），中波(MF)，短波(HF)，厘米波(SHF)，毫米波(EHF)频率范围波长的总结</span>
-      <time style="float: right;">05-30</time>
-    </a>
-  
-    
-    <a href="/2019/04/17/DFT%EF%BC%8CDTFT%EF%BC%8CDFS%EF%BC%8CFFT%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB%E4%BB%A5%E5%8F%8A%E5%BA%8F%E5%88%97%E8%A1%A5%E9%9B%B6%E5%92%8C%E6%8F%92%E5%80%BC%E5%AF%B9%E9%A2%91%E5%9F%9F%E7%9A%84%E5%BD%B1%E5%93%8D/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">DFT，DTFT，DFS，FFT之间的关系以及序列补零和插值对频域的影响</span>
-      <time style="float: right;">04-17</time>
-    </a>
-  
-    
-    <a href="/2019/03/22/%E6%95%B0%E5%AD%97%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E6%A8%A1%E6%8B%9F%E8%A7%92%E9%A2%91%E7%8E%87%E5%92%8C%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E5%92%8C%E5%BD%92%E4%B8%80%E5%8C%96%E8%A7%92%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%8C%E5%8F%8AFFT%E9%A2%91%E7%8E%87%E5%92%8C%E5%AE%9E%E9%99%85%E7%89%A9%E7%90%86%E9%A2%91%E7%8E%87%E7%9A%84%E5%85%B3%E7%B3%BB%E5%88%86%E6%9E%90/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">数字角频率和模拟角频率和物理频率和归一化角频率的关系，及FFT频率和实际物理频率的关系分析</span>
-      <time style="float: right;">03-22</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">jenkins安装中遇到的坑</h1>
+            
+            <div class="markdown-body">
+              <p>首先有两种安装方式：大多数是下载rpm包，rpm -ivh …..rpm</p>
+<p>但是我安装的时候提示daemonize这个包没有，其实在这一步使用yum install daemonize，再执行安装就行了</p>
+<p>但是现在官网jenkins推荐使用yum安装，先下载他们的库文件，但是我用这种方式报错了，因为我下载到了rpm包，所以也没有顺着这条路深究</p>
+<p>其实大坑是yum的代理和源的配置，有时间了补充一下</p>
 
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Devops%EF%BC%8CAnsible/">Devops，Ansible</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/06/06/%E5%9C%A8python%E4%B8%AD%E4%BD%BF%E7%94%A8Ansible%E5%AE%9E%E7%8E%B0Devops%E7%9A%84%E7%9B%B8%E5%85%B3%E6%80%BB%E7%BB%93/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">在python中使用Ansible实现Devops的相关总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/10/kubernetes%EF%BC%88k8s%EF%BC%89%E4%B9%8Byaml%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/">
+                        <span class="hidden-mobile">kubernetes（k8s）之yaml文件详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#valine",
+          app_id: "4l4KDMQ2rUvohNwf2pd0A3MP-gzGzoHsz",
+          app_key: "Kd9Pm7FejmvkWARe5jtfgoVp",
+          placeholder: "说点什么",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -329,9 +435,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
 
 
 
